@@ -1,0 +1,18 @@
+{
+  "short_name": "Rakshika",
+  "name": "Rakshika — Women's Safety & Empowerment",
+  "icons": [
+    {
+      "src": "/shield.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FAF8FF",
+  "theme_color": "#6366F1",
+  "display": "standalone",
+  "orientation": "portrait",
+  "categories": ["lifestyle", "utilities", "safety"],
+  "description": "Smart AI-powered safety companion for proactive journey protection and community awareness."
+}
