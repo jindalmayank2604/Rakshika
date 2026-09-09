@@ -9,7 +9,7 @@ if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_ap
   try {
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    console.log('✅ Google Gemini AI Service initialized.');
+    console.log('✅ Google Gemini AI Service initialized for WeSafe.');
   } catch (err) {
     console.warn('⚠️ Gemini AI init error:', err.message);
   }
@@ -21,7 +21,7 @@ if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_ap
 export const classifyIncidentText = async (text, categoryHint = '') => {
   if (model) {
     try {
-      const prompt = `You are Rakshika AI, an intelligent community safety assistant.
+      const prompt = `You are WeSafe AI, an intelligent community safety assistant.
 Analyze the following user-submitted safety incident description:
 "${text}"
 
@@ -102,12 +102,12 @@ export const getAISafetyResponse = async (message, conversationHistory = []) => 
         }
       });
 
-      const systemContext = `You are Rakshika AI, a calm, trustworthy, empowering, and protective safety companion for women and commuters.
+      const systemContext = `You are WeSafe AI, a calm, trustworthy, empowering, and protective safety companion.
 CRITICAL GUIDELINES:
-1. Always communicate with confidence, empathy, and practical guidance.
-2. NEVER claim 100% guarantee of safety or replace emergency services.
-3. For immediate physical danger, always emphasize calling emergency numbers (112, 1091 Women Helpline) and activating the Rakshika SOS button immediately.
-4. Provide structured, calming, actionable steps for journey preparation, feeling uncomfortable, or assessing reports.`;
+1. Always communicate with confidence, empathy, and practical proactive guidance (Tagline: Protect. Prevent. Empower.).
+2. NEVER claim 100% guarantee of safety or replace official emergency services.
+3. For immediate physical danger, always emphasize calling emergency numbers (112 National Emergency, 1091 Women Helpline) and activating the WeSafe SOS button immediately.
+4. Provide structured, calming, actionable steps for journey preparation, safer route decisions, or assessing community hazard reports.`;
 
       const prompt = `${systemContext}\n\nUser Question: ${message}`;
       const result = await chat.sendMessage(prompt);
@@ -122,37 +122,37 @@ CRITICAL GUIDELINES:
 
   if (lower.includes('followed') || lower.includes('following') || lower.includes('behind me')) {
     return `### Immediate Action Steps If You Feel Followed:
-1. **Head toward light and crowds:** Turn toward an open store, pharmacy, metro station, or illuminated restaurant immediately.
-2. **Change your pace or cross the street:** This confirms if someone is intentionally following without confrontation.
-3. **Make a loud phone call:** Call a trusted contact or fake a call stating clearly: *"I'm just turning the corner onto [Street Name], I see you waiting outside."*
-4. **Hold Rakshika SOS Ready:** Keep the app open on your screen and your thumb near the SOS hold circle.
-5. **If in immediate danger:** Dial **112** or **1091** and seek help from security guards or shopkeepers nearby.`;
+1. **Head toward light and verified safe spots:** Turn toward an open 24/7 store, pharmacy, metro station, or illuminated restaurant immediately.
+2. **Change your pace or cross the street:** This confirms if someone is intentionally matching your movement without escalating confrontation.
+3. **Make a loud phone call:** Call a trusted contact or state clearly: *"I'm just turning the corner onto [Street Name], I see you waiting outside."*
+4. **Hold WeSafe SOS Ready:** Keep the app open on your screen with your thumb on the 3-second SOS panic trigger.
+5. **If in immediate danger:** Dial **112** or **1091** and seek shelter with security guards or open commercial establishments.`;
   }
 
-  if (lower.includes('late night') || lower.includes('journey') || lower.includes('cab') || lower.includes('taxi')) {
+  if (lower.includes('late night') || lower.includes('journey') || lower.includes('cab') || lower.includes('taxi') || lower.includes('ride')) {
     return `### Safe Late-Night Travel Checklist:
-- **Share Live Trip:** Share your live journey link with your primary emergency contact before getting into the vehicle.
-- **Verify Cab Details:** Always check the license plate, driver photo, and ask *"Who are you picking up?"* before entering.
-- **Sit in the Rear Passenger Seat:** Gives you view of the driver, access to both doors, and prevents close physical reach.
-- **Keep Phone Battery High & Accessible:** Avoid using earphones at full volume so you maintain situational awareness.
-- **Trust Your Instincts:** If something feels off, ask the driver to stop at a well-lit public spot immediately.`;
+- **Share Live Trip:** Share your live journey corridor with your primary emergency contact before entering the vehicle.
+- **Verify Cab Details:** Always verify the registration plate, driver identity, and ask *"Who are you picking up?"* before entering.
+- **Sit in the Rear Passenger Seat:** Gives you a clear view of the driver, access to both doors, and maintains physical distance.
+- **Keep Phone Battery High & Accessible:** Avoid using earphones at loud volumes to preserve 360-degree situational awareness.
+- **Trust Your Instincts:** If the vehicle departs from well-lit arterial roads, ask the driver to stop at a populated location immediately.`;
   }
 
-  if (lower.includes('unsafe') || lower.includes('area') || lower.includes('safe route')) {
-    return `### Assessing Area Safety with Rakshika:
-- **Check the Safety Map:** Review recent community reports for poor lighting, isolated pathways, or harassment spots in this neighborhood.
-- **Stick to Arterial Roads:** Even if shortcuts look faster on navigation, choose roads with operational streetlights, open shops, and regular traffic.
-- **Travel in Pairs or Groups:** If transiting after 9 PM, consider waiting for fellow commuters at well-lit transit hubs.
-- **File a Report:** If you notice a broken streetlight or isolated stretch, submit a quick report to alert fellow community members.`;
+  if (lower.includes('unsafe') || lower.includes('area') || lower.includes('safe route') || lower.includes('route')) {
+    return `### Assessing Area Safety with WeSafe:
+- **Use the Safer Route Planner:** Compare fastest paths against well-lit safety corridors with verified police posts and CCTV coverage.
+- **Stick to Arterial Roads:** Avoid dimly lit service lanes or deserted shortcuts, even if navigation saves 3-4 minutes.
+- **Identify Safe Havens:** Look for 24-hour pharmacies and transit hubs plotted on the WeSafe map along your route.
+- **File a Report:** If you notice a broken streetlight or isolated stretch, submit a quick hazard report to protect fellow community members.`;
   }
 
-  return `I'm here with you. As your **Rakshika AI Safety Companion**, I'm designed to help you navigate journeys calmly, prepare for travel, evaluate community safety reports, and stay protected.
+  return `I'm here with you. As your **WeSafe AI Safety Companion**, I'm designed to help you navigate journeys calmly, evaluate street hazards, plan safer routes, and stay protected.
 
 How can I support you right now?
-• Get tips on **traveling late at night**
-• Check what to do if you **feel uncomfortable or followed**
-• Understand how to **prepare for a new commute route**
-• Learn how community safety reports are verified
+• Check how to **evaluate late-night travel routes**
+• Get steps if you **feel uncomfortable or suspect you are being followed**
+• Learn what to check before **entering a ride-share cab**
+• Understand how the **WeSafe community safety index** is calculated
 
 *(Note: For life-threatening emergencies, please dial **112 / 1091** or hold the SOS button on your dashboard immediately.)*`;
 };

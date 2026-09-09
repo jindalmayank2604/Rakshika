@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   Navigation,
   Activity,
-  Heart
+  Compass,
+  Lightbulb
 } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -21,74 +22,75 @@ import { GlassCard } from '../components/ui/GlassCard';
 import { Hero3DIllustration } from '../assets/illustrations/3DIllustrations';
 import { SafetyMap } from '../components/maps/SafetyMap';
 import { useSafety } from '../context/SafetyContext';
+import { Shield3D, SafeRoute3D, AiCompanion3D, CommunityReport3D } from '../components/ui/Illustrations3D';
 
 export const LandingPage = () => {
   const { reports } = useSafety();
 
   const features = [
     {
-      title: 'Instant 3-Sec SOS',
-      description: 'Press-and-hold radial emergency trigger that broadcasts live GPS coordinates to your safety circle.',
-      icon: ShieldCheck,
-      color: 'bg-rose-500'
+      title: 'AI Safer Route Recommendations',
+      description: 'Calculates high-visibility corridors avoiding dark alleyways, unverified hazard clusters, and maximizing verified police/CCTV presence.',
+      icon: Navigation,
+      color: 'bg-wine-plum'
     },
     {
-      title: 'Community Safety Map',
-      description: 'Explore verified neighborhood hazards, poorly lit stretches, and street safety insights before stepping out.',
+      title: 'Interactive Community Safety Map',
+      description: 'Mapbox-powered real-time visualization of defective streetlights, secluded paths, harassment reports, and 24/7 safe havens.',
       icon: MapPin,
-      color: 'bg-indigo-600'
+      color: 'bg-accent'
     },
     {
-      title: 'Proactive Incident Reporting',
-      description: '5-step reporting with AI classification and photo evidence to help municipal cells fix dangerous blindspots.',
-      icon: AlertTriangle,
-      color: 'bg-amber-500'
-    },
-    {
-      title: 'Rakshika AI Assistant',
-      description: '24/7 empathetic guidance for late-night transit prep, assessing report legitimacy, and feeling protected.',
+      title: 'WeSafe Gemini AI Assistant',
+      description: '24/7 proactive companion providing pre-trip risk evaluation, cab safety checklists, and situational de-escalation tips.',
       icon: Bot,
-      color: 'bg-teal-600'
+      color: 'bg-wine-plum'
     },
     {
-      title: 'Trusted Safety Circle',
-      description: 'Maintain primary emergency contacts with instant test dispatch and verification status.',
-      icon: Users,
-      color: 'bg-purple-600'
+      title: 'Press-and-Hold 3-Sec SOS',
+      description: 'Controlled radial countdown panic trigger that broadcasts live GPS coordinates and automated SMS to your emergency circle.',
+      icon: ShieldCheck,
+      color: 'bg-emergency'
     },
     {
-      title: 'Safety Index Analytics',
-      description: 'Dynamic area safety score aggregated from verified community reports and street observations.',
+      title: 'Community Incident Reporting',
+      description: '5-step report wizard with Cloudinary media evidence and AI severity classification to safeguard fellow commuters.',
+      icon: AlertTriangle,
+      color: 'bg-accent'
+    },
+    {
+      title: 'Proactive Safety Index',
+      description: 'Dynamic area safety score calculated from verified reports, street lighting uptime, and municipal infrastructure status.',
       icon: Activity,
-      color: 'bg-emerald-600'
+      color: 'bg-emerald-700'
     }
   ];
 
   const steps = [
     {
       number: '01',
-      title: 'Create Your Safety Circle',
-      description: 'Add family and trusted mentors to receive real-time notifications in critical situations.'
+      title: 'Set Up Your Safety Circle',
+      description: 'Add trusted emergency contacts who receive your live coordinates and journey alerts.'
     },
     {
       number: '02',
-      title: 'Explore Your Surroundings',
-      description: 'Check active safety scores, street lighting coverage, and verified reports along your route.'
+      title: 'Check Route Safety Index',
+      description: 'Compare fastest vs safest paths based on street illumination, verified hazards, and safe haven checkpoints.'
     },
     {
       number: '03',
-      title: 'Report Unsafe Situations',
-      description: 'Document defective lighting, harassment spots, or isolated paths to safeguard other women.'
+      title: 'Report Street Hazards',
+      description: 'Log broken lighting, harassment incidents, or blind spots to protect your local community.'
     },
     {
       number: '04',
-      title: 'Stay Informed & Protected',
-      description: 'Navigate with confidence backed by 24/7 AI-guided support and one-touch emergency triggers.'
+      title: 'Travel With AI Confidence',
+      description: 'Get real-time situational guidance from WeSafe Gemini AI and instant 1-touch SOS protection.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF8FF] text-slate-800 flex flex-col">
+    <div className="min-h-screen bg-linen dark:bg-[#3a1322] text-wine-plum dark:text-bone flex flex-col transition-colors duration-300">
       <Navbar />
 
       {/* 1. HERO SECTION */}
@@ -96,48 +98,48 @@ export const LandingPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Copy & CTAs */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-50 border border-primary-100 text-xs font-bold text-primary-700">
-              <Sparkles className="w-3.5 h-3.5 text-primary-600" />
-              <span>Smart Safety for Every Journey</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-powder-petal/80 dark:bg-wine-plum/80 border border-dust-grey/60 dark:border-smoky-rose/30 text-xs font-bold text-wine-plum dark:text-bone">
+              <Sparkles className="w-3.5 h-3.5 text-accent" />
+              <span>AI-Powered Community Safety Platform</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-wine-plum dark:text-bone">
               Protect. Prevent.{' '}
-              <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-teal-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-wine-plum via-smoky-rose to-accent bg-clip-text text-transparent">
                 Empower.
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Rakshika helps you stay aware, report unsafe situations, connect with trusted people, and make safer decisions wherever you go.
+            <p className="text-base sm:text-lg text-dust-grey-dark dark:text-silver max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              WeSafe combines community safety reports, location intelligence, and Gemini AI to provide proactive safety insights and help you make safer journey decisions before, during, and after your trip.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
               <Link to="/signup" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full justify-center" icon={ArrowRight}>
+                <Button variant="primary" size="lg" className="w-full justify-center shadow-warm-md" icon={ArrowRight}>
                   Get Started Free
                 </Button>
               </Link>
-              <a href="#map-preview" className="w-full sm:w-auto">
-                <Button variant="glass" size="lg" className="w-full justify-center" icon={Navigation}>
-                  Explore Safety Map
+              <Link to="/map" className="w-full sm:w-auto">
+                <Button variant="glass" size="lg" className="w-full justify-center border-dust-grey/70 dark:border-smoky-rose/30" icon={Navigation}>
+                  Explore Safer Routes
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Micro Trust Indicators */}
-            <div className="pt-6 border-t border-slate-200/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 font-medium">
+            <div className="pt-6 border-t border-dust-grey/40 dark:border-smoky-rose/20 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-dust-grey-dark dark:text-silver font-medium">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                Verified Community Reports
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                Community Verified Reports
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                24/7 AI Safety Companion
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                Gemini 2.0 AI Safety Companion
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 Installable Web App (PWA)
               </span>
             </div>
@@ -153,16 +155,16 @@ export const LandingPage = () => {
       </section>
 
       {/* 2. TRUST / VALUE SECTION */}
-      <section className="py-16 bg-white/70 backdrop-blur-md border-y border-slate-200/60 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 glass-card-subtle border-y border-dust-grey/50 dark:border-smoky-rose/30 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-4">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-primary-600">
-            Why Rakshika Exists
+          <span className="text-xs font-extrabold uppercase tracking-widest text-accent dark:text-almond-dark">
+            The WeSafe Difference
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">
-            Safety shouldn't begin after something goes wrong.
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-wine-plum dark:text-bone leading-snug">
+            Safety shouldn't begin after an emergency occurs.
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Traditional panic applications only trigger during distress. Rakshika changes the paradigm by focusing on **proactive awareness, street-level visibility, community reporting, and AI-guided journey preparation** so you travel with continuous confidence.
+          <p className="text-sm sm:text-base text-dust-grey-dark dark:text-silver leading-relaxed">
+            Instead of only reacting to crises, WeSafe shifts the paradigm by combining crowdsourced community hazard data with location intelligence and AI to provide **proactive safety insights and safer route recommendations**.
           </p>
         </div>
       </section>
@@ -170,36 +172,36 @@ export const LandingPage = () => {
       {/* 3. HOW IT WORKS */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         <div className="text-center space-y-3 mb-16">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-primary-600">
-            4-Step Visual Flow
+          <span className="text-xs font-extrabold uppercase tracking-wider text-accent dark:text-almond-dark">
+            4-Step Journey Protection
           </span>
-          <h2 className="text-3xl font-extrabold text-slate-900">How Rakshika Works</h2>
-          <p className="text-sm text-slate-600 max-w-lg mx-auto">
-            Simple, comforting, and designed to support you at every stage of your movement.
+          <h2 className="text-3xl font-extrabold text-wine-plum dark:text-bone">How WeSafe Works</h2>
+          <p className="text-sm text-dust-grey-dark dark:text-silver max-w-lg mx-auto">
+            Intuitive, calm, and designed to support you at every stage of your movement.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step) => (
-            <GlassCard key={step.number} hoverEffect className="p-6 relative">
-              <div className="text-3xl font-black text-primary-200 mb-3">{step.number}</div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">{step.title}</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">{step.description}</p>
+            <GlassCard key={step.number} hoverEffect className="p-6 relative border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-sm">
+              <div className="text-3xl font-black text-accent/40 dark:text-almond-dark/40 mb-3">{step.number}</div>
+              <h3 className="text-base font-bold text-wine-plum dark:text-bone mb-2">{step.title}</h3>
+              <p className="text-xs text-dust-grey-dark dark:text-silver leading-relaxed">{step.description}</p>
             </GlassCard>
           ))}
         </div>
       </section>
 
       {/* 4. FEATURES SECTION */}
-      <section id="features" className="py-20 bg-slate-50/60 border-y border-slate-200/60 px-4 sm:px-6 lg:px-8">
+      <section id="features" className="py-20 bg-parchment/60 dark:bg-wine-plum/40 border-y border-dust-grey/60 dark:border-smoky-rose/30 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-3 mb-16">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-primary-600">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-accent dark:text-almond-dark">
               Core Capabilities
             </span>
-            <h2 className="text-3xl font-extrabold text-slate-900">Built for Real Protection</h2>
-            <p className="text-sm text-slate-600 max-w-lg mx-auto">
-              Every tool crafted with empathy, cutting-edge AI, and modern web engineering.
+            <h2 className="text-3xl font-extrabold text-wine-plum dark:text-bone">Built for Real Proactive Protection</h2>
+            <p className="text-sm text-dust-grey-dark dark:text-silver max-w-lg mx-auto">
+              Every tool engineered with empathy, location intelligence, and responsible Gemini AI.
             </p>
           </div>
 
@@ -207,12 +209,12 @@ export const LandingPage = () => {
             {features.map((f) => {
               const Icon = f.icon;
               return (
-                <GlassCard key={f.title} hoverEffect className="p-6 space-y-3">
-                  <div className={`w-12 h-12 rounded-2xl ${f.color} text-white flex items-center justify-center shadow-md`}>
+                <GlassCard key={f.title} hoverEffect className="p-6 space-y-3 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-sm">
+                  <div className={`w-12 h-12 rounded-2xl ${f.color} text-bone flex items-center justify-center shadow-md`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">{f.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{f.description}</p>
+                  <h3 className="text-base font-bold text-wine-plum dark:text-bone">{f.title}</h3>
+                  <p className="text-xs text-dust-grey-dark dark:text-silver leading-relaxed">{f.description}</p>
                 </GlassCard>
               );
             })}
@@ -224,46 +226,46 @@ export const LandingPage = () => {
       <section id="map-preview" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8">
           <div className="lg:col-span-8">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-primary-600">
-              Interactive Surroundings
+            <span className="text-xs font-extrabold uppercase tracking-wider text-accent dark:text-almond-dark">
+              Mapbox Location Intelligence
             </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 mt-1">
-              Live Community Safety Map
+            <h2 className="text-3xl font-extrabold text-wine-plum dark:text-bone mt-1">
+              Live Community Safety Map & Safer Routes
             </h2>
-            <p className="text-sm text-slate-600 mt-2 max-w-xl">
-              Real-time visualization of lighting defects, suspicious loitering, broken surveillance, and verified safe routes.
+            <p className="text-sm text-dust-grey-dark dark:text-silver mt-2 max-w-xl">
+              Real-time visualization of lighting defects, suspicious loitering, broken surveillance, and verified safe havens.
             </p>
           </div>
           <div className="lg:col-span-4 flex lg:justify-end">
-            <Link to="/report">
-              <Button variant="primary" icon={AlertTriangle}>
-                Report an Incident
+            <Link to="/map">
+              <Button variant="primary" icon={Navigation}>
+                Open Route Planner
               </Button>
             </Link>
           </div>
         </div>
 
-        <SafetyMap reports={reports} height="h-[480px]" />
+        <SafetyMap incidents={reports} height="h-[480px]" />
       </section>
 
       {/* 6. CALL TO ACTION BANNER */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full mb-16">
-        <GlassCard className="p-8 sm:p-12 text-center bg-gradient-to-r from-primary-900 via-indigo-900 to-slate-900 text-white shadow-2xl relative overflow-hidden">
+        <GlassCard className="p-8 sm:p-12 text-center bg-gradient-to-r from-wine-plum via-[#5c293c] to-wine-plum text-bone shadow-warm-lg relative overflow-hidden border border-smoky-rose/40">
           <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-bone">
               Take Confidence with You Everywhere
             </h2>
-            <p className="text-sm sm:text-base text-indigo-200 leading-relaxed">
-              Join thousands of commuters building a safer, more transparent, and empowered community.
+            <p className="text-sm sm:text-base text-silver leading-relaxed">
+              Join commuters building a proactive, transparent, and empowered community safety network.
             </p>
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link to="/signup" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full bg-white text-primary-900 hover:bg-slate-100 shadow-xl">
+                <Button variant="primary" size="lg" className="w-full bg-bone text-wine-plum hover:bg-linen shadow-xl font-extrabold">
                   Create Your Account
                 </Button>
               </Link>
               <Link to="/dashboard" className="w-full sm:w-auto">
-                <Button variant="ghost" size="lg" className="w-full text-white hover:bg-white/10">
+                <Button variant="ghost" size="lg" className="w-full text-bone hover:bg-white/10">
                   Open Web App
                 </Button>
               </Link>

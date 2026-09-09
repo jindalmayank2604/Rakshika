@@ -1,11 +1,11 @@
 export const INCIDENT_CATEGORIES = [
-  { id: 'Poor Lighting', name: 'Poor Lighting', color: '#F59E0B', bg: '#FEF3C7', icon: 'SunMedium', description: 'Defective streetlights or unlit walkways' },
-  { id: 'Harassment', name: 'Harassment', color: '#EF4444', bg: '#FEE2E2', icon: 'AlertTriangle', description: 'Verbal catcalling, stalking or physical intimidation' },
-  { id: 'Suspicious Activity', name: 'Suspicious Activity', color: '#8B5CF6', bg: '#EDE9FE', icon: 'Eye', description: 'Unidentified loitering or unusual gatherings' },
-  { id: 'Broken CCTV', name: 'Broken CCTV', color: '#3B82F6', bg: '#DBEAFE', icon: 'VideoOff', description: 'Damaged or covered surveillance cameras' },
-  { id: 'Isolated Area', name: 'Isolated Area', color: '#10B981', bg: '#D1FAE5', icon: 'Footprints', description: 'Secluded alleys, overgrown paths or dead ends' },
-  { id: 'Unsafe Area', name: 'Unsafe Area', color: '#F97316', bg: '#FFEDD5', icon: 'ShieldAlert', description: 'General hazardous condition or lack of assistance' },
-  { id: 'Other', name: 'Other Safety Concern', color: '#6B7280', bg: '#F3F4F6', icon: 'HelpCircle', description: 'Other community safety observations' }
+  { id: 'Poor Lighting', name: 'Poor Lighting', color: '#b47f82', bg: '#f5ebe0', icon: 'SunMedium', description: 'Defective streetlights or unlit walkways' },
+  { id: 'Harassment', name: 'Harassment', color: '#b91c1c', bg: '#fee2e2', icon: 'AlertTriangle', description: 'Verbal catcalling, stalking or physical intimidation' },
+  { id: 'Suspicious Activity', name: 'Suspicious Activity', color: '#8c5254', bg: '#e3d5ca', icon: 'Eye', description: 'Unidentified loitering or unusual gatherings' },
+  { id: 'Broken CCTV', name: 'Broken CCTV', color: '#6d2e46', bg: '#f4e5ea', icon: 'VideoOff', description: 'Damaged or covered surveillance cameras' },
+  { id: 'Isolated Area', name: 'Isolated Area', color: '#2b7a78', bg: '#e6fffa', icon: 'Footprints', description: 'Secluded alleys, overgrown paths or dead ends' },
+  { id: 'Unsafe Area', name: 'Unsafe Area', color: '#a26769', bg: '#ece0e1', icon: 'ShieldAlert', description: 'General hazardous condition or lack of assistance' },
+  { id: 'Other', name: 'Other Safety Concern', color: '#734143', bg: '#edede9', icon: 'HelpCircle', description: 'Other community safety observations' }
 ];
 
 export const INITIAL_REPORTS = [
@@ -96,6 +96,12 @@ export const INITIAL_REPORTS = [
   }
 ];
 
+export const SAFE_HAVENS = [
+  { id: 1, name: '24/7 MedPlus Pharmacy Safe Point', type: 'Pharmacy / First Aid', latitude: 28.5365, longitude: 77.3920, phone: '+91 11 2345 6789' },
+  { id: 2, name: 'City Police Community Assistance Post #5', type: 'Police Booth', latitude: 28.5410, longitude: 77.3980, phone: '112' },
+  { id: 3, name: 'Metro Station Passenger Care Hub', type: 'Transit Safe Zone', latitude: 28.5310, longitude: 77.3840, phone: '+91 11 2233 4455' }
+];
+
 export const INITIAL_CONTACTS = [
   { id: 1, user_id: 2, name: 'Ananya Sharma', phone: '+91 98234 56789', relationship: 'Sister', is_primary: true },
   { id: 2, user_id: 2, name: 'Vikram Sharma', phone: '+91 98345 67890', relationship: 'Father', is_primary: false },
@@ -133,13 +139,13 @@ export const SAFETY_TIPS = [
   {
     id: 1,
     title: 'Live Journey Sharing',
-    tip: 'Share your live route with a trusted contact before taking an unfamiliar cab or auto after 8 PM.',
+    tip: 'Share your live route with a trusted contact before taking an unfamiliar cab or transit after 8 PM.',
     category: 'Travel'
   },
   {
     id: 2,
     title: 'Situational Awareness',
-    tip: 'Keep one earphone off while walking through quiet or poorly lit metro exits and subways.',
+    tip: 'Keep one earphone off while walking through quiet or poorly lit transit exits and subways.',
     category: 'Awareness'
   },
   {
@@ -151,7 +157,7 @@ export const SAFETY_TIPS = [
   {
     id: 4,
     title: 'Instant SOS Ready',
-    tip: 'Keep Rakshika pinned on your phone home screen for quick single-touch emergency access.',
+    tip: 'Keep WeSafe pinned on your phone home screen for instant single-touch emergency broadcast.',
     category: 'Fast Action'
   }
 ];

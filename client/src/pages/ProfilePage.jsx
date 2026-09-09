@@ -3,7 +3,6 @@ import { User, Mail, Phone, ShieldCheck, Camera, Save } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Badge } from '../components/ui/Badge';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 
@@ -20,21 +19,21 @@ export const ProfilePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     updateProfileData(formData);
-    showToast('Profile details updated successfully.', 'success');
+    showToast('WeSafe profile details updated successfully.', 'success');
   };
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-16">
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary-600">
+          <span className="text-xs font-bold uppercase tracking-wider text-wine-plum dark:text-silver">
             Account Management
           </span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-wine-plum dark:text-bone tracking-tight">
           User Profile
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+        <p className="text-xs sm:text-sm text-dust-grey-dark dark:text-silver mt-0.5">
           Manage your personal safety profile, contact details, and credentials.
         </p>
       </div>
@@ -42,14 +41,14 @@ export const ProfilePage = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Left Profile Card */}
         <div className="md:col-span-4">
-          <GlassCard className="p-6 text-center space-y-4">
+          <GlassCard className="p-6 text-center space-y-4 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-sm">
             <div className="relative w-24 h-24 mx-auto">
-              <div className="w-full h-full rounded-full bg-gradient-to-tr from-primary-500 to-teal-400 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg">
+              <div className="w-full h-full rounded-full bg-gradient-to-tr from-wine-plum to-smoky-rose flex items-center justify-center text-bone text-3xl font-extrabold shadow-lg">
                 {formData.name[0]}
               </div>
               <button
                 type="button"
-                className="absolute bottom-0 right-0 p-2 rounded-full bg-slate-900 text-white hover:bg-primary-600 shadow-md transition-colors"
+                className="absolute bottom-0 right-0 p-2 rounded-full bg-wine-plum text-bone hover:bg-smoky-rose shadow-md transition-colors border border-bone/30"
                 title="Change Avatar"
               >
                 <Camera className="w-3.5 h-3.5" />
@@ -57,22 +56,22 @@ export const ProfilePage = () => {
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-slate-900">{formData.name}</h3>
-              <p className="text-xs text-slate-500">{formData.email}</p>
+              <h3 className="text-base font-bold text-wine-plum dark:text-bone">{formData.name}</h3>
+              <p className="text-xs text-dust-grey-dark dark:text-silver">{formData.email}</p>
             </div>
 
             <div className="pt-2">
-              <Badge variant="primary">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Verified Rakshika User
-              </Badge>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-powder-petal/80 dark:bg-wine-plum/80 text-wine-plum dark:text-bone font-bold text-xs border border-dust-grey/60 dark:border-smoky-rose/30">
+                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                Verified WeSafe Member
+              </span>
             </div>
           </GlassCard>
         </div>
 
         {/* Right Form */}
         <div className="md:col-span-8">
-          <GlassCard className="p-6 sm:p-8">
+          <GlassCard className="p-6 sm:p-8 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-sm">
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 label="Full Name"

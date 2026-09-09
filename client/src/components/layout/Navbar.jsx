@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Menu, X, ArrowRight, User } from 'lucide-react';
+import { Menu, X, ArrowRight, User, Moon, Sun, ShieldCheck } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { Shield3D } from '../ui/Illustrations3D';
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
   useEffect(() => {
@@ -21,29 +24,27 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Features', href: '#features' },
+    { name: 'Safer Routes', href: '#features' },
     { name: 'Community Map', href: '#map-preview' },
-    { name: 'About', href: '#about' },
+    { name: 'AI Companion', href: '#ai-companion' },
   ];
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? 'glass-nav shadow-sm py-3' : 'bg-transparent py-5'
+        scrolled ? 'glass-nav shadow-warm-sm py-3' : 'bg-transparent py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-primary-500/25 group-hover:scale-105 transition-transform">
-            <Shield className="w-5 h-5 text-white" />
-          </div>
+        <Link to="/" className="flex items-center gap-3 group">
+          <Shield3D className="w-10 h-10 group-hover:scale-105 transition-transform" />
           <div>
-            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-primary-900 via-primary-700 to-secondary-700 bg-clip-text text-transparent">
-              Rakshika
+            <span className="text-xl font-extrabold tracking-tight text-wine-plum dark:text-bone">
+              WeSafe
             </span>
-            <span className="hidden sm:block text-[10px] font-semibold tracking-wider text-slate-400 uppercase -mt-1">
-              Safety Companion
+            <span className="hidden sm:block text-[10px] font-bold tracking-wider text-accent dark:text-almond-dark uppercase -mt-1">
+              Protect. Prevent. Empower.
             </span>
           </div>
         </Link>
@@ -54,15 +55,23 @@ export const Navbar = () => {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors"
+              className="text-sm font-semibold text-wine-plum/80 dark:text-bone/80 hover:text-wine-plum dark:hover:text-bone transition-colors"
             >
               {link.name}
             </a>
           ))}
         </nav>
 
-        {/* Right CTA */}
+        {/* Right CTA & Theme Toggle */}
         <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl text-wine-plum dark:text-bone hover:bg-powder-petal/60 dark:hover:bg-smoky-rose/30 transition-colors"
+            title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+          >
+            {isDark ? <Sun className="w-4 h-4 text-almond-dark" /> : <Moon className="w-4 h-4 text-wine-plum" />}
+          </button>
+
           {user ? (
             <Link to="/dashboard">
               <Button variant="primary" size="md" icon={User}>
@@ -78,7 +87,7 @@ export const Navbar = () => {
               </Link>
               <Link to="/signup">
                 <Button variant="primary" size="md" icon={ArrowRight}>
-                  Get Started
+                  Get Started Free
                 </Button>
               </Link>
             </>
@@ -87,6 +96,12 @@ export const Navbar = () => {
 
         {/* Mobile Hamburger */}
         <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl text-wine-plum dark:text-bone hover:bg-powder-petal/60 dark:hover:bg-smoky-rose/30 transition-colors"
+          >
+            {isDark ? <Sun className="w-4 h-4 text-almond-dark" /> : <Moon className="w-4 h-4 text-wine-plum" />}
+          </button>
           {user && (
             <Link to="/dashboard">
               <Button variant="primary" size="sm">
@@ -96,7 +111,7 @@ export const Navbar = () => {
           )}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white/60 focus:outline-none"
+            className="p-2 rounded-xl text-wine-plum dark:text-bone hover:bg-powder-petal/50 focus:outline-none"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -106,20 +121,20 @@ export const Navbar = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-modal border-t border-slate-100 px-5 pt-4 pb-6 mt-3 space-y-4 animate-fade-in shadow-xl">
+        <div className="md:hidden glass-modal border-t border-dust-grey/60 px-5 pt-4 pb-6 mt-3 space-y-4 animate-fade-in shadow-xl">
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-semibold text-slate-700 hover:text-primary-600 py-1"
+                className="text-base font-semibold text-wine-plum dark:text-bone hover:text-accent py-1"
               >
                 {link.name}
               </a>
             ))}
           </div>
-          <div className="pt-4 border-t border-slate-200/60 flex flex-col gap-2.5">
+          <div className="pt-4 border-t border-dust-grey/50 flex flex-col gap-2.5">
             {!user ? (
               <>
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>

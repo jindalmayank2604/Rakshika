@@ -60,18 +60,18 @@ export const EmergencyContactsPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary-600">
+            <span className="text-xs font-bold uppercase tracking-wider text-wine-plum dark:text-silver">
               Personal SOS Network
             </span>
-            <span className="text-[10px] bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">
+            <span className="text-[10px] bg-powder-petal dark:bg-wine-plum text-wine-plum dark:text-bone font-bold px-2 py-0.5 rounded-full border border-dust-grey/60 dark:border-smoky-rose/30">
               {contacts.length} Configured
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Emergency Contacts
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-wine-plum dark:text-bone tracking-tight">
+            Emergency Contacts & Safety Circle
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            People who will receive immediate live GPS coordinates when you trigger SOS.
+          <p className="text-xs sm:text-sm text-dust-grey-dark dark:text-silver mt-0.5">
+            Trusted contacts who receive your real-time GPS coordinates when you trigger SOS or start safe journey sharing.
           </p>
         </div>
 
@@ -81,12 +81,12 @@ export const EmergencyContactsPage = () => {
       </div>
 
       {/* Advisory Banner */}
-      <div className="p-4 rounded-2xl bg-purple-50/80 border border-purple-100 flex items-start gap-3">
-        <ShieldCheck className="w-5 h-5 text-purple-700 flex-shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-powder-petal/60 dark:bg-wine-plum/60 border border-dust-grey/60 dark:border-smoky-rose/30 flex items-start gap-3 shadow-warm-sm">
+        <ShieldCheck className="w-5 h-5 text-accent dark:text-almond-dark flex-shrink-0 mt-0.5" />
         <div>
-          <h4 className="text-xs font-bold text-purple-950">How Emergency Circle Works:</h4>
-          <p className="text-xs text-purple-800 mt-0.5 leading-relaxed">
-            When SOS is held for 3 seconds, your primary contact will receive an expedited SMS notification with a real-time tracking link and last known GPS address.
+          <h4 className="text-xs font-bold text-wine-plum dark:text-bone">How WeSafe Emergency Circle Works:</h4>
+          <p className="text-xs text-dust-grey-dark dark:text-silver mt-0.5 leading-relaxed">
+            When SOS is held for 3 seconds, your primary and secondary contacts will immediately receive automated SMS notifications with your live GPS location and safe corridor link.
           </p>
         </div>
       </div>
@@ -130,11 +130,11 @@ export const EmergencyContactsPage = () => {
           />
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-slate-700">Relationship</label>
+            <label className="block text-sm font-semibold text-wine-plum dark:text-silver">Relationship</label>
             <select
               value={formData.relationship}
               onChange={(e) => setFormData({ ...formData, relationship: e.target.value })}
-              className="w-full bg-white/90 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+              className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm"
             >
               <option value="Sister">Sister</option>
               <option value="Brother">Brother</option>
@@ -147,12 +147,12 @@ export const EmergencyContactsPage = () => {
             </select>
           </div>
 
-          <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer pt-1">
+          <label className="flex items-center gap-2 text-xs text-wine-plum dark:text-bone cursor-pointer pt-1">
             <input
               type="checkbox"
               checked={formData.is_primary}
               onChange={(e) => setFormData({ ...formData, is_primary: e.target.checked })}
-              className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+              className="rounded border-dust-grey text-wine-plum focus:ring-accent"
             />
             <span className="font-semibold">Set as Primary Emergency Responder</span>
           </label>
