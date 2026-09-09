@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
 import { SafetyProvider } from './context/SafetyContext';
 import { NotificationProvider } from './context/NotificationContext';
 
@@ -36,7 +37,7 @@ const AppShell = ({ children }) => {
   const [sosModalOpen, setSosModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#FAF8FF] flex text-slate-800">
+    <div className="min-h-screen bg-linen dark:bg-[#3a1322] flex text-wine-plum dark:text-bone transition-colors duration-300">
       {/* Desktop & Tablet Sidebar */}
       <Sidebar />
 
@@ -58,12 +59,12 @@ const AppShell = ({ children }) => {
       <Modal
         isOpen={sosModalOpen}
         onClose={() => setSosModalOpen(false)}
-        title="Emergency SOS Trigger"
+        title="WeSafe Emergency SOS Trigger"
         maxWidth="max-w-md"
       >
         <div className="text-center py-2">
-          <p className="text-xs text-slate-500 mb-4">
-            Press and hold the circle below for 3 seconds to alert your emergency circle.
+          <p className="text-xs text-dust-grey-dark dark:text-silver mb-4">
+            Press and hold the circle below for 3 seconds to alert your emergency circle with live GPS coordinates.
           </p>
           <SOSButton isModal={true} onClose={() => setSosModalOpen(false)} />
         </div>
@@ -81,35 +82,37 @@ const AppShell = ({ children }) => {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <SafetyProvider>
-          <NotificationProvider>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <SafetyProvider>
+            <NotificationProvider>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
 
-              {/* Authenticated Dashboard Routes */}
-              <Route path="/dashboard" element={<AppShell><DashboardPage /></AppShell>} />
-              <Route path="/map" element={<AppShell><SafetyMapPage /></AppShell>} />
-              <Route path="/report" element={<AppShell><ReportIncidentPage /></AppShell>} />
-              <Route path="/my-reports" element={<AppShell><MyReportsPage /></AppShell>} />
-              <Route path="/contacts" element={<AppShell><EmergencyContactsPage /></AppShell>} />
-              <Route path="/ai-assistant" element={<AppShell><AIAssistantPage /></AppShell>} />
-              <Route path="/notifications" element={<AppShell><NotificationsPage /></AppShell>} />
-              <Route path="/profile" element={<AppShell><ProfilePage /></AppShell>} />
-              <Route path="/settings" element={<AppShell><SettingsPage /></AppShell>} />
-              <Route path="/admin" element={<AppShell><AdminDashboardPage /></AppShell>} />
+                {/* Authenticated Dashboard Routes */}
+                <Route path="/dashboard" element={<AppShell><DashboardPage /></AppShell>} />
+                <Route path="/map" element={<AppShell><SafetyMapPage /></AppShell>} />
+                <Route path="/report" element={<AppShell><ReportIncidentPage /></AppShell>} />
+                <Route path="/my-reports" element={<AppShell><MyReportsPage /></AppShell>} />
+                <Route path="/contacts" element={<AppShell><EmergencyContactsPage /></AppShell>} />
+                <Route path="/ai-assistant" element={<AppShell><AIAssistantPage /></AppShell>} />
+                <Route path="/notifications" element={<AppShell><NotificationsPage /></AppShell>} />
+                <Route path="/profile" element={<AppShell><ProfilePage /></AppShell>} />
+                <Route path="/settings" element={<AppShell><SettingsPage /></AppShell>} />
+                <Route path="/admin" element={<AppShell><AdminDashboardPage /></AppShell>} />
 
-              {/* Catch-all */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </NotificationProvider>
-        </SafetyProvider>
-      </AuthProvider>
+                {/* Catch-all */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </NotificationProvider>
+          </SafetyProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

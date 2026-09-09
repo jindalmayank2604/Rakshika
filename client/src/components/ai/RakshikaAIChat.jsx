@@ -3,22 +3,22 @@ import { Send, Bot, User, Sparkles, Shield, AlertCircle, Compass, ShieldCheck } 
 import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { apiService } from '../../services/api';
-import { AIAssistantIllustration } from '../../assets/illustrations/3DIllustrations';
+import { AiCompanion3D, Shield3D } from '../ui/Illustrations3D';
 
 export const RakshikaAIChat = ({ className = '' }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
       role: 'assistant',
-      content: `Hello! I am **Rakshika AI**, your 24/7 personal safety and travel companion.
+      content: `Hello! I am **WeSafe AI**, your 24/7 proactive personal safety and travel companion.
 
 I can help you:
-• Prepare for late-night journeys & cab safety checklists
-• Guide you if you feel followed or uncomfortable
-• Explain community safety reports and high-risk zones
-• Share proactive situational awareness tips
+• **Evaluate Safe Routes**: Check lighting, hazard density, and police presence before heading out
+• **Prepare Late-Night Journeys**: Cab verification checklist and live tracking guidance
+• **De-escalate Uncomfortable Situations**: Actionable steps if you feel followed or uneasy
+• **Understand Community Reports**: Analysis of recent hazards filed near your location
 
-*How can I help support your journey today?*`
+*How can I help protect and empower your journey today?*`
     }
   ]);
   const [input, setInput] = useState('');
@@ -26,10 +26,10 @@ I can help you:
   const chatBottomRef = useRef(null);
 
   const presetQuestions = [
-    'What should I do if I feel followed?',
-    'Help me prepare for a late-night journey.',
-    'Is this area reported as unsafe?',
-    'How are community reports verified?'
+    'How safe is my late-night transit route?',
+    'What should I check before entering a ride-share cab?',
+    'What should I do if I suspect I am being followed?',
+    'Explain the WeSafe community safety index.'
   ];
 
   useEffect(() => {
@@ -54,7 +54,7 @@ I can help you:
         {
           id: Date.now() + 1,
           role: 'assistant',
-          content: 'I had a momentary connection issue. For immediate emergencies, please dial **112** or activate your SOS button.'
+          content: 'I had a momentary connection issue. For immediate emergencies, please dial **112** (National Emergency) or hold down your WeSafe SOS button for 3 seconds.'
         }
       ]);
     } finally {
@@ -63,27 +63,26 @@ I can help you:
   };
 
   const formatMessageContent = (content) => {
-    // Basic Markdown bullet and bold formatting helper
     return content.split('\n').map((line, idx) => {
       if (line.startsWith('### ')) {
-        return <h4 key={idx} className="font-extrabold text-sm text-slate-900 mt-2 mb-1">{line.replace('### ', '')}</h4>;
+        return <h4 key={idx} className="font-extrabold text-sm text-wine-plum dark:text-bone mt-2 mb-1">{line.replace('### ', '')}</h4>;
       }
       if (line.startsWith('- ') || line.startsWith('• ')) {
         return (
-          <li key={idx} className="ml-4 list-disc text-xs text-slate-700 leading-relaxed my-0.5">
+          <li key={idx} className="ml-4 list-disc text-xs text-wine-plum/90 dark:text-bone/90 leading-relaxed my-0.5">
             {line.replace(/^[-•]\s*/, '')}
           </li>
         );
       }
       if (line.match(/^\d+\.\s/)) {
         return (
-          <p key={idx} className="text-xs text-slate-700 leading-relaxed my-1 font-medium">
+          <p key={idx} className="text-xs text-wine-plum/90 dark:text-bone/90 leading-relaxed my-1 font-medium">
             {line}
           </p>
         );
       }
       return (
-        <p key={idx} className="text-xs text-slate-700 leading-relaxed my-1">
+        <p key={idx} className="text-xs text-wine-plum/90 dark:text-bone/90 leading-relaxed my-1">
           {line}
         </p>
       );
@@ -104,24 +103,24 @@ I can help you:
               <div
                 className={`w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm ${
                   isAssistant
-                    ? 'bg-gradient-to-tr from-primary-600 to-indigo-500 text-white'
-                    : 'bg-gradient-to-tr from-teal-500 to-emerald-600 text-white'
+                    ? 'bg-gradient-to-tr from-wine-plum to-smoky-rose text-bone'
+                    : 'bg-gradient-to-tr from-accent to-dust-grey-dark text-bone'
                 }`}
               >
                 {isAssistant ? <Bot className="w-5 h-5" /> : <User className="w-5 h-5" />}
               </div>
 
               <div
-                className={`max-w-[85%] sm:max-w-[78%] rounded-3xl p-4 shadow-sm ${
+                className={`max-w-[85%] sm:max-w-[78%] rounded-3xl p-4 shadow-warm-sm ${
                   isAssistant
-                    ? 'bg-white/95 border border-slate-200/80 text-slate-800'
-                    : 'bg-primary-600 text-white shadow-primary-500/20'
+                    ? 'glass-card border border-dust-grey/60 dark:border-smoky-rose/30 text-wine-plum dark:text-bone'
+                    : 'bg-wine-plum text-bone shadow-md'
                 }`}
               >
                 {isAssistant ? (
                   formatMessageContent(msg.content)
                 ) : (
-                  <p className="text-xs text-white leading-relaxed">{msg.content}</p>
+                  <p className="text-xs text-bone leading-relaxed">{msg.content}</p>
                 )}
               </div>
             </div>
@@ -130,12 +129,12 @@ I can help you:
 
         {loading && (
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-primary-600 text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-2xl bg-wine-plum text-bone flex items-center justify-center">
               <Bot className="w-5 h-5" />
             </div>
-            <div className="bg-white/95 border border-slate-200/80 rounded-3xl p-4 flex items-center gap-2 text-xs text-slate-500">
-              <Sparkles className="w-4 h-4 text-primary-600 animate-spin" />
-              <span>Rakshika AI is evaluating safety guidelines...</span>
+            <div className="glass-card border border-dust-grey/60 dark:border-smoky-rose/30 rounded-3xl p-4 flex items-center gap-2 text-xs text-wine-plum dark:text-bone">
+              <Sparkles className="w-4 h-4 text-accent animate-spin" />
+              <span>WeSafe Gemini AI is evaluating situational safety heuristics...</span>
             </div>
           </div>
         )}
@@ -145,13 +144,13 @@ I can help you:
 
       {/* Preset Suggestions */}
       <div className="pt-3 pb-2">
-        <p className="text-[11px] font-bold text-slate-400 mb-1.5 px-1">Common Safety Inquiries:</p>
+        <p className="text-[11px] font-bold text-dust-grey-dark dark:text-silver mb-1.5 px-1">Common Safety Inquiries:</p>
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {presetQuestions.map((q, i) => (
             <button
               key={i}
               onClick={() => handleSend(q)}
-              className="px-3 py-1.5 rounded-xl bg-white/80 hover:bg-white text-slate-700 hover:text-primary-700 border border-slate-200/70 text-xs font-medium whitespace-nowrap shadow-xs transition-colors"
+              className="px-3 py-1.5 rounded-xl glass-card-subtle hover:bg-powder-petal/50 text-wine-plum dark:text-bone border border-dust-grey/60 dark:border-smoky-rose/30 text-xs font-medium whitespace-nowrap shadow-xs transition-colors"
             >
               {q}
             </button>
@@ -169,10 +168,10 @@ I can help you:
       >
         <input
           type="text"
-          placeholder="Ask Rakshika AI for guidance or journey prep..."
+          placeholder="Ask WeSafe AI for proactive guidance or route safety prep..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 bg-white/90 border border-slate-200 rounded-2xl px-4 py-3 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 shadow-sm"
+          className="flex-1 glass-input rounded-2xl px-4 py-3 text-xs sm:text-sm shadow-sm"
         />
         <Button
           type="submit"

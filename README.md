@@ -1,54 +1,72 @@
-# 🛡️ RAKSHIKA — Modern AI-Powered Women's & Community Safety Platform
+# 🛡️ WESAFE — AI-Powered Community Safety Platform
 
 > **Protect. Prevent. Empower.**  
 > *Smart safety for every journey.*
 
-Rakshika is a modern, venture-grade installable Progressive Web Application (PWA) engineered to help women prevent unsafe situations, report street hazards, understand community safety conditions, access emergency support, and navigate with confidence.
+WeSafe is an AI-powered community safety platform that helps users prevent, understand, and respond to safety risks through proactive safety insights, community-based hazard reporting, Mapbox-powered safe routing, and Gemini AI assistance.
 
 ---
 
 ## 🌟 Key Product Features
 
-### 1. 🚨 Press-and-Hold 3-Second SOS Trigger
+### 1. 🚨 Press-and-Hold 3-Second SOS Panic Trigger
 - Large radial countdown interaction prevents accidental panic activations.
 - Dispatches emergency alert payload with live GPS coordinates (`latitude`, `longitude`, `address`).
-- Simulates automated SMS broadcasts to designated primary and secondary emergency contacts.
+- Simulates automated SMS broadcasts to designated primary and secondary emergency contacts in your Safety Circle.
 
-### 2. 🗺️ Interactive Community Safety Map
-- Powered by Leaflet & OpenStreetMap with custom category-colored map pins.
-- Filter by category: **Poor Lighting**, **Harassment**, **Suspicious Activity**, **Broken CCTV**, **Isolated Area**, and **Other**.
-- Live GPS user locator pin, search bar, and incident inspection sheet.
+### 2. 🗺️ Interactive Safety Map using Mapbox / MapLibre
+- Real-time visualization of crowdsourced hazards, poorly lit pathways, harassment spots, and verified 24/7 Safe Havens (police booths, pharmacies).
+- Category filtering: **Poor Lighting**, **Harassment**, **Suspicious Activity**, **Broken CCTV**, **Isolated Area**, and **Other**.
+- Live GPS locator, search bar, and incident inspection sheet.
 
-### 3. 📝 5-Step Incident Reporting Wizard
-- **Step 1:** Categorization with visual icons & severity assessment.
-- **Step 2:** Detailed description & incident title.
-- **Step 3:** Interactive pin-on-map / live GPS location picker.
-- **Step 4:** Photo evidence upload with client-side preview.
-- **Step 5:** AI incident classification preview & reassuring success modal.
+### 3. 🧭 Proactive Safer Route Recommendations
+- Compares **Safest Route** (High illumination corridor, police posts, CCTV coverage) vs. **Fastest Route** (Alleyways with reported defects).
+- Dynamic Safety Score (0–100) computed based on community hazard density and street lighting uptime.
+- Turn-by-turn safe journey tips and 1-click live journey tracker sharing.
 
-### 4. 🤖 Rakshika AI Safety Companion (Gemini Integrated)
-- 24/7 situational guidance for late-night transit, cab inspection checklists, and panic de-escalation.
-- Auto-evaluates reported hazards to assist community moderation and verify incident severity.
+### 4. 🤖 WeSafe AI Safety Assistant (Google Gemini 2.0 Integrated)
+- 24/7 situational guidance: late-night transit preparation, cab inspection checklists, and panic de-escalation steps.
+- Automatic incident classification and severity scoring to support community moderation.
 
-### 5. 📊 Community Safety Insight (Safety Index)
-- Contextual score calculated dynamically based on verified local reports and resolved street lighting defects.
+### 5. 📝 5-Step Incident Reporting Wizard with Cloudinary
+- Step-by-step reporting with visual icons, severity assessment, interactive map pin picker, and Cloudinary media upload.
+- Gemini AI auto-classification and reassuring completion modal.
 
-### 6. 🛡️ Admin Moderation & Verification Portal
-- Live analytics charts (Recharts) detailing weekly volume, resolution rates, and category distribution.
-- Audit-friendly verification queue with 1-click status actions (**Verify**, **Mark Resolved**, **Flag / Reject**) and administrative audit notes.
+### 6. 📊 Admin Moderation & Verification Portal
+- Live telemetry charts (Recharts) for weekly incident volume, resolution rate, and category distribution.
+- Audit queue with 1-click verification status (**Verify**, **Mark Resolved**, **Flag / Reject**) and administrative audit notes.
 
-### 7. 📱 Progressive Web App (PWA) Architecture
-- `manifest.json`, Service Worker offline caching (`sw.js`), and unobtrusive install prompt banner.
-- Responsive across Desktop, Laptop, Tablet, and Mobile with a dedicated bottom navigation bar.
+### 7. 📱 Progressive Web App (PWA) Architecture & Custom Design System
+- Custom Light Mode Palette (**Parchment**, **Dust Grey**, **Linen**, **Powder Petal**, **Almond Silk**) and Dark Mode Palette (**Silver**, **Bone**, **Almond Silk**, **Smoky Rose**, **Wine Plum**).
+- 3D friendly vector illustrations, selective glassmorphism, responsive across mobile, tablet, and desktop.
+- Service Worker offline caching and installable PWA banner.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Frontend:** React 18, Vite, Tailwind CSS (Glassmorphism design tokens), React Router 6, Lucide Icons, Leaflet, React-Leaflet, Recharts.
-- **Backend:** Node.js, Express.js, JWT, bcryptjs, Multer, CORS, Google Gemini AI (`@google/generative-ai`).
-- **Database:** MySQL relational schema with full foreign keys and audit history (`schema.sql` & `seed.sql`).
+- **Frontend:** React 18, Vite, Tailwind CSS (Earthy & Rose theme tokens), React Router 6, Lucide Icons, MapLibre GL / Mapbox, Recharts.
+- **Backend:** Node.js, Express.js, JWT, bcryptjs, Multer, Cloudinary, CORS, Google Gemini AI (`@google/generative-ai`).
+- **Database:** PostgreSQL relational schema with PostGIS coordinates, foreign keys, and audit history (`postgres_schema.sql` & `postgres_seed.sql`).
 - **Storage Strategy:** Dual-Mode architecture (seamless auto-switching between Express REST APIs and client-side storage for zero-config demos).
+
+---
+
+## 🎨 Color Palette Reference
+
+### Light Mode:
+- **Parchment:** `#edede9`
+- **Dust Grey:** `#d6ccc2`
+- **Linen:** `#f5ebe0`
+- **Powder Petal:** `#e3d5ca`
+- **Almond Silk:** `#d5bdaf`
+
+### Dark Mode:
+- **Silver:** `#cebebe`
+- **Bone:** `#ece2d0`
+- **Almond Silk:** `#d5b9b2`
+- **Smoky Rose:** `#a26769`
+- **Wine Plum:** `#6d2e46`
 
 ---
 
@@ -62,7 +80,7 @@ npm run dev
 ```
 Open **`http://localhost:5173`** in your browser.
 
-### 2. Start Backend API Server (Optional)
+### 2. Start Backend API Server
 ```bash
 cd server
 npm install
@@ -70,11 +88,11 @@ npm start
 ```
 Server runs at **`http://localhost:5000`**.
 
-### 3. Database Setup (MySQL)
+### 3. Database Setup (PostgreSQL)
 Execute the scripts located in `server/database/`:
 ```bash
-mysql -u root -p < server/database/schema.sql
-mysql -u root -p < server/database/seed.sql
+psql -U postgres -d wesafe_db -f server/database/postgres_schema.sql
+psql -U postgres -d wesafe_db -f server/database/postgres_seed.sql
 ```
 
 ---
@@ -83,10 +101,10 @@ mysql -u root -p < server/database/seed.sql
 
 | Role | Email | Password | Description |
 | :--- | :--- | :--- | :--- |
-| **User** | `priya@example.com` | `Password123!` | Standard commuter account with contacts & reports |
-| **Admin** | `admin@rakshika.org` | `Password123!` | Moderation role with verification & analytics access |
+| **User** | `priya@example.com` | `Password123!` | Standard commuter account with contacts, reports, & routes |
+| **Admin** | `admin@wesafe.org` | `Password123!` | Moderation role with verification & analytics access |
 
 ---
 
 ## 🔒 Safety & Responsible AI Disclaimer
-Rakshika is a safety empowerment platform and web technology prototype. In life-threatening emergencies, commuters should immediately contact emergency services (**112** National Emergency / **1091** Women Helpline).
+WeSafe is a proactive safety empowerment platform and web technology prototype. In life-threatening emergencies, commuters should immediately contact emergency services (**112** National Emergency / **1091** Women Helpline).

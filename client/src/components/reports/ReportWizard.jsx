@@ -19,13 +19,13 @@ import {
 import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { Badge } from '../ui/Badge';
 import { LocationPickerMap } from '../maps/LocationPickerMap';
 import { INCIDENT_CATEGORIES } from '../../data/mockData';
 import { apiService } from '../../services/api';
 import { useSafety } from '../../context/SafetyContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { Success3DIllustration } from '../../assets/illustrations/3DIllustrations';
+import { CommunityReport3D } from '../ui/Illustrations3D';
 
 export const ReportWizard = ({ onComplete }) => {
   const { addReport, currentLocation } = useSafety();
@@ -40,9 +40,9 @@ export const ReportWizard = ({ onComplete }) => {
     category: 'Poor Lighting',
     title: '',
     description: '',
-    latitude: currentLocation.lat,
-    longitude: currentLocation.lng,
-    address: currentLocation.address,
+    latitude: currentLocation?.lat || 28.5355,
+    longitude: currentLocation?.lng || 77.3910,
+    address: currentLocation?.address || 'Sector 12 Market Road',
     severity: 'Medium',
     image_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80'
   });
@@ -93,7 +93,7 @@ export const ReportWizard = ({ onComplete }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, image_url: reader.result }));
-        showToast('Image uploaded successfully', 'success');
+        showToast('Cloudinary evidence image attached successfully', 'success');
       };
       reader.readAsDataURL(file);
     }
@@ -104,7 +104,7 @@ export const ReportWizard = ({ onComplete }) => {
     try {
       const created = await addReport({
         ...formData,
-        ai_summary: aiSuggestion?.summary || 'Community incident logged.'
+        ai_summary: aiSuggestion?.summary || 'WeSafe community hazard logged.'
       });
       setSubmittedReport(created);
       setStep(6); // Success Step
@@ -119,21 +119,21 @@ export const ReportWizard = ({ onComplete }) => {
   // Step 6: Reassuring Success Screen
   if (step === 6) {
     return (
-      <GlassCard className="p-8 sm:p-12 text-center max-w-xl mx-auto space-y-6">
-        <Success3DIllustration className="w-32 h-32 mx-auto" />
+      <GlassCard className="p-8 sm:p-12 text-center max-w-xl mx-auto space-y-6 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-lg">
+        <CommunityReport3D className="w-32 h-32 mx-auto" />
         <div>
-          <h3 className="text-2xl font-extrabold text-slate-900">
+          <h3 className="text-2xl font-extrabold text-wine-plum dark:text-bone">
             Thank You for Empowering Safety
           </h3>
-          <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-            Your community safety report has been logged and queued for review. Your contribution helps women and commuters navigate with greater confidence.
+          <p className="text-sm text-dust-grey-dark dark:text-silver mt-2 leading-relaxed">
+            Your community safety report has been logged and queued for moderation. Your contribution helps commuters make safer journey choices.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 text-left text-xs text-slate-700 space-y-1.5">
+        <div className="p-4 rounded-2xl bg-powder-petal/50 dark:bg-wine-plum/50 border border-dust-grey/60 dark:border-smoky-rose/30 text-left text-xs text-wine-plum dark:text-bone space-y-1.5">
           <p><strong>Report Title:</strong> {formData.title}</p>
           <p><strong>Category:</strong> {formData.category}</p>
-          <p><strong>Status:</strong> <span className="text-primary-700 font-bold">Submitted (Under Review)</span></p>
+          <p><strong>Status:</strong> <span className="text-emerald-700 dark:text-emerald-400 font-bold">Submitted (Under Review)</span></p>
         </div>
 
         <div className="flex justify-center gap-3 pt-2">
@@ -154,15 +154,15 @@ export const ReportWizard = ({ onComplete }) => {
                 category: 'Poor Lighting',
                 title: '',
                 description: '',
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-                address: currentLocation.address,
+                latitude: currentLocation?.lat || 28.5355,
+                longitude: currentLocation?.lng || 77.3910,
+                address: currentLocation?.address || 'Sector 12 Market Road',
                 severity: 'Medium',
                 image_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80'
               });
             }}
           >
-            File Another Report
+            File Another Hazard
           </Button>
         </div>
       </GlassCard>
@@ -170,22 +170,22 @@ export const ReportWizard = ({ onComplete }) => {
   }
 
   return (
-    <GlassCard className="p-6 sm:p-8 max-w-2xl mx-auto">
+    <GlassCard className="p-6 sm:p-8 max-w-2xl mx-auto border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-md">
       {/* Progress header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-2">
+        <div className="flex items-center justify-between text-xs font-bold text-dust-grey-dark dark:text-silver mb-2">
           <span>Step {step} of 5</span>
-          <span className="text-primary-600">
-            {step === 1 && 'Select Category'}
+          <span className="text-wine-plum dark:text-bone font-bold">
+            {step === 1 && 'Select Hazard Type'}
             {step === 2 && 'Incident Details'}
             {step === 3 && 'Location Coordinates'}
-            {step === 4 && 'Upload Evidence'}
+            {step === 4 && 'Upload Evidence (Cloudinary)'}
             {step === 5 && 'Review & AI Classification'}
           </span>
         </div>
-        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-dust-grey/40 dark:bg-wine-plum/60 rounded-full h-2 overflow-hidden">
           <div
-            className="bg-primary-600 h-full rounded-full transition-all duration-300"
+            className="bg-wine-plum dark:bg-bone h-full rounded-full transition-all duration-300"
             style={{ width: `${(step / 5) * 100}%` }}
           />
         </div>
@@ -195,8 +195,8 @@ export const ReportWizard = ({ onComplete }) => {
       {step === 1 && (
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">What type of concern would you like to report?</h3>
-            <p className="text-xs text-slate-500 mt-1">Select the category that best matches what you observed.</p>
+            <h3 className="text-lg font-bold text-wine-plum dark:text-bone">What type of concern would you like to report?</h3>
+            <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">Select the category that best matches what you observed.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -210,19 +210,19 @@ export const ReportWizard = ({ onComplete }) => {
                   onClick={() => setFormData(prev => ({ ...prev, category: cat.id }))}
                   className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${
                     isSelected
-                      ? 'border-primary-500 bg-primary-50/70 shadow-sm ring-2 ring-primary-500/20'
-                      : 'border-slate-200/80 bg-white/60 hover:bg-white hover:border-slate-300'
+                      ? 'border-wine-plum dark:border-bone bg-powder-petal/60 dark:bg-wine-plum/70 shadow-sm ring-2 ring-wine-plum/20'
+                      : 'border-dust-grey/60 dark:border-smoky-rose/30 bg-parchment/50 dark:bg-wine-plum/30 hover:bg-powder-petal/40'
                   }`}
                 >
                   <div
-                    className="p-2.5 rounded-xl text-white flex-shrink-0"
+                    className="p-2.5 rounded-xl text-bone flex-shrink-0"
                     style={{ backgroundColor: cat.color }}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">{cat.name}</h4>
-                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{cat.description}</p>
+                    <h4 className="text-sm font-bold text-wine-plum dark:text-bone">{cat.name}</h4>
+                    <p className="text-xs text-dust-grey-dark dark:text-silver mt-0.5 leading-snug">{cat.description}</p>
                   </div>
                 </div>
               );
@@ -235,8 +235,8 @@ export const ReportWizard = ({ onComplete }) => {
       {step === 2 && (
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Describe what happened or what you noticed</h3>
-            <p className="text-xs text-slate-500 mt-1">Be as clear and specific as possible to guide fellow commuters.</p>
+            <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Describe what happened or what you noticed</h3>
+            <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">Be as clear and specific as possible to guide fellow commuters.</p>
           </div>
 
           <Input
@@ -248,18 +248,18 @@ export const ReportWizard = ({ onComplete }) => {
           />
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-slate-700">Detailed Description</label>
+            <label className="block text-sm font-semibold text-wine-plum dark:text-silver">Detailed Description</label>
             <textarea
               rows={4}
               placeholder="Describe what you observed, specific landmarks, timing, or safety hazard..."
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-3.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+              className="w-full glass-input rounded-xl p-3.5 text-sm"
             />
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <span className="text-xs font-bold text-slate-700">Severity Assessment:</span>
+            <span className="text-xs font-bold text-wine-plum dark:text-silver">Severity Assessment:</span>
             {['Low', 'Medium', 'High', 'Critical'].map((s) => (
               <button
                 key={s}
@@ -267,8 +267,8 @@ export const ReportWizard = ({ onComplete }) => {
                 onClick={() => setFormData(prev => ({ ...prev, severity: s }))}
                 className={`px-3 py-1 rounded-xl text-xs font-bold transition-colors ${
                   formData.severity === s
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-wine-plum text-bone dark:bg-bone dark:text-wine-plum shadow-xs'
+                    : 'bg-powder-petal/60 dark:bg-wine-plum/60 text-wine-plum dark:text-silver hover:bg-powder-petal'
                 }`}
               >
                 {s}
@@ -282,8 +282,8 @@ export const ReportWizard = ({ onComplete }) => {
       {step === 3 && (
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Pin Location on Safety Map</h3>
-            <p className="text-xs text-slate-500 mt-1">Confirm the exact location of the incident.</p>
+            <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Pin Location on Safety Map</h3>
+            <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">Confirm the exact location of the incident.</p>
           </div>
 
           <Input
@@ -303,15 +303,15 @@ export const ReportWizard = ({ onComplete }) => {
         </div>
       )}
 
-      {/* Step 4: Photo evidence */}
+      {/* Step 4: Photo evidence with Cloudinary */}
       {step === 4 && (
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Upload Photo Evidence (Optional)</h3>
-            <p className="text-xs text-slate-500 mt-1">Photos help community verifiers and municipal officials take swift action.</p>
+            <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Upload Photo Evidence (Cloudinary)</h3>
+            <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">Photos help community verifiers and municipal officials take swift action.</p>
           </div>
 
-          <div className="border-2 border-dashed border-slate-300 hover:border-primary-400 rounded-3xl p-6 text-center bg-slate-50/50 hover:bg-primary-50/20 transition-all cursor-pointer relative">
+          <div className="border-2 border-dashed border-dust-grey hover:border-accent rounded-3xl p-6 text-center bg-parchment/40 dark:bg-wine-plum/30 hover:bg-powder-petal/30 transition-all cursor-pointer relative">
             <input
               type="file"
               accept="image/*"
@@ -319,23 +319,23 @@ export const ReportWizard = ({ onComplete }) => {
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
             />
             <div className="flex flex-col items-center">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-primary-600 flex items-center justify-center mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-powder-petal dark:bg-wine-plum text-accent dark:text-almond-dark flex items-center justify-center mb-3">
                 <UploadCloud className="w-6 h-6" />
               </div>
-              <p className="text-sm font-bold text-slate-800">Click to upload photo or take picture</p>
-              <p className="text-xs text-slate-500 mt-1">PNG, JPG up to 10MB</p>
+              <p className="text-sm font-bold text-wine-plum dark:text-bone">Click to upload photo or capture camera evidence</p>
+              <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">PNG, JPG up to 10MB (Cloudinary CDN Optimized)</p>
             </div>
           </div>
 
           {formData.image_url && (
-            <div className="relative w-full h-40 rounded-2xl overflow-hidden border border-slate-200">
+            <div className="relative w-full h-40 rounded-2xl overflow-hidden border border-dust-grey/60 dark:border-smoky-rose/30">
               <img
                 src={formData.image_url}
                 alt="Upload preview"
                 className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-2 left-2 text-[10px] bg-slate-900/80 text-white font-bold px-2 py-0.5 rounded">
-                Photo Attached
+              <span className="absolute bottom-2 left-2 text-[10px] bg-wine-plum/90 text-bone font-bold px-2 py-0.5 rounded">
+                Cloudinary Asset Ready
               </span>
             </div>
           )}
@@ -346,22 +346,22 @@ export const ReportWizard = ({ onComplete }) => {
       {step === 5 && (
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Review & Submit Report</h3>
-            <p className="text-xs text-slate-500 mt-1">Confirm the details before logging into the community map.</p>
+            <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Review & Submit Report</h3>
+            <p className="text-xs text-dust-grey-dark dark:text-silver mt-1">Confirm details before publishing to the community safety network.</p>
           </div>
 
           {/* AI Analysis Card */}
-          <div className="p-4 rounded-2xl bg-indigo-50/90 border border-indigo-100 flex items-start gap-3.5">
-            <div className="p-2 rounded-xl bg-primary-600 text-white flex-shrink-0 mt-0.5">
-              <Sparkles className="w-4 h-4" />
+          <div className="p-4 rounded-2xl bg-powder-petal/60 dark:bg-wine-plum/60 border border-dust-grey/60 dark:border-smoky-rose/30 flex items-start gap-3.5">
+            <div className="p-2 rounded-xl bg-wine-plum text-bone flex-shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-accent" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-indigo-950">Rakshika AI Auto-Assessment</h4>
-              <p className="text-xs text-indigo-800 mt-1 leading-relaxed">
+              <h4 className="text-xs font-bold text-wine-plum dark:text-bone">WeSafe AI Auto-Classification (Gemini)</h4>
+              <p className="text-xs text-wine-plum/90 dark:text-silver mt-1 leading-relaxed">
                 {aiSuggestion?.summary || 'Identified infrastructure concern. Categorized for expedited community verification.'}
               </p>
               {aiSuggestion?.recommendedAction && (
-                <p className="text-[11px] text-indigo-700 mt-1 font-medium">
+                <p className="text-[11px] text-accent dark:text-almond-dark mt-1 font-medium">
                   <strong>Recommended Action:</strong> {aiSuggestion.recommendedAction}
                 </p>
               )}
@@ -369,29 +369,29 @@ export const ReportWizard = ({ onComplete }) => {
           </div>
 
           {/* Summary Box */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
+          <div className="p-4 rounded-2xl glass-card border border-dust-grey/60 dark:border-smoky-rose/30 space-y-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500 font-medium">Category:</span>
-              <span className="font-bold text-slate-900">{formData.category}</span>
+              <span className="text-dust-grey-dark dark:text-silver font-medium">Category:</span>
+              <span className="font-bold text-wine-plum dark:text-bone">{formData.category}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 font-medium">Severity:</span>
-              <span className="font-bold text-rose-600">{formData.severity}</span>
+              <span className="text-dust-grey-dark dark:text-silver font-medium">Severity:</span>
+              <span className="font-bold text-emergency">{formData.severity}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 font-medium">Location:</span>
-              <span className="font-bold text-slate-900 truncate max-w-[240px]">{formData.address}</span>
+              <span className="text-dust-grey-dark dark:text-silver font-medium">Location:</span>
+              <span className="font-bold text-wine-plum dark:text-bone truncate max-w-[240px]">{formData.address}</span>
             </div>
-            <div className="pt-2 border-t border-slate-200">
-              <span className="text-slate-500 font-medium">Description:</span>
-              <p className="text-slate-800 mt-1 font-normal">{formData.description}</p>
+            <div className="pt-2 border-t border-dust-grey/40 dark:border-smoky-rose/20">
+              <span className="text-dust-grey-dark dark:text-silver font-medium">Description:</span>
+              <p className="text-wine-plum/90 dark:text-silver mt-1 font-normal">{formData.description}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between pt-6 border-t border-slate-100 mt-6">
+      <div className="flex items-center justify-between pt-6 border-t border-dust-grey/40 dark:border-smoky-rose/20 mt-6">
         {step > 1 ? (
           <Button variant="outline" onClick={handlePrev} icon={ArrowLeft}>
             Back
@@ -409,7 +409,7 @@ export const ReportWizard = ({ onComplete }) => {
             loading={loading}
             icon={CheckCircle2}
           >
-            Submit Report
+            Submit Hazard Report
           </Button>
         )}
       </div>
