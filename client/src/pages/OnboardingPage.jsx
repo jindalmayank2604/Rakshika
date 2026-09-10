@@ -17,7 +17,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useSafety } from '../context/SafetyContext';
 import { useNotifications } from '../context/NotificationContext';
-import { Hero3DIllustration, Success3DIllustration } from '../assets/illustrations/3DIllustrations';
+import { Shield3D } from '../components/ui/Illustrations3D';
 
 export const OnboardingPage = () => {
   const [step, setStep] = useState(1);
@@ -45,30 +45,28 @@ export const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50/70 via-[#FAF8FF] to-teal-50/50 flex flex-col justify-center items-center py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-linen dark:bg-[#3a1322] flex flex-col justify-center items-center py-12 px-4 sm:px-6 transition-colors duration-300">
       <div className="w-full max-w-xl">
         {/* Progress header */}
-        <div className="mb-6 flex items-center justify-between text-xs font-bold text-slate-500">
+        <div className="mb-6 flex items-center justify-between text-xs font-bold text-dust-grey-dark dark:text-silver">
           <span>Onboarding • Step {step} of 5</span>
           <button
             onClick={() => navigate('/dashboard')}
-            className="text-primary-600 hover:underline"
+            className="text-wine-plum dark:text-bone hover:underline"
           >
             Skip to Dashboard
           </button>
         </div>
 
-        <GlassCard className="p-6 sm:p-10 space-y-6">
+        <GlassCard className="p-6 sm:p-10 space-y-6 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-lg">
           {/* Step 1: Welcome */}
           {step === 1 && (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-primary-500/25">
-                <Shield className="w-8 h-8" />
-              </div>
-              <h2 className="text-2xl font-black text-slate-900">
-                Welcome to Rakshika
+              <Shield3D className="w-16 h-16 mx-auto" />
+              <h2 className="text-2xl font-black text-wine-plum dark:text-bone">
+                Welcome to WeSafe
               </h2>
-              <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+              <p className="text-sm text-dust-grey-dark dark:text-silver max-w-md mx-auto leading-relaxed">
                 Your intelligent companion for proactive safety, community awareness, and emergency preparedness. Let's take 60 seconds to personalize your protection.
               </p>
             </div>
@@ -78,12 +76,12 @@ export const OnboardingPage = () => {
           {step === 2 && (
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-purple-100 text-purple-700">
+                <div className="p-2.5 rounded-2xl bg-powder-petal dark:bg-wine-plum text-accent dark:text-almond-dark">
                   <Users className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Add Trusted Contact</h3>
-                  <p className="text-xs text-slate-500">Your primary SOS responder in urgent situations.</p>
+                  <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Add Trusted Contact</h3>
+                  <p className="text-xs text-dust-grey-dark dark:text-silver">Your primary SOS responder in urgent situations.</p>
                 </div>
               </div>
 
@@ -114,17 +112,17 @@ export const OnboardingPage = () => {
           {/* Step 3: Location Permissions */}
           {step === 3 && (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-powder-petal/80 dark:bg-wine-plum text-accent dark:text-almond-dark flex items-center justify-center mx-auto border border-dust-grey/50">
                 <MapPin className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900">
-                Enable Location for Live Safety
+              <h3 className="text-xl font-bold text-wine-plum dark:text-bone">
+                Enable Location for Live Safety & Route Intelligence
               </h3>
-              <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                Rakshika uses your location exclusively to display real-time safety scores, nearby community incident alerts, and pinpoint your coordinates in SOS emergencies.
+              <p className="text-xs text-dust-grey-dark dark:text-silver max-w-md mx-auto leading-relaxed">
+                WeSafe uses your location to calculate safer route recommendations, display live lighting/hazard index, and pinpoint your coordinates during SOS mode.
               </p>
-              <div className="p-3 bg-teal-50 rounded-xl border border-teal-100 text-xs text-teal-800 font-medium">
-                ✓ Precise GPS active for emergency assistance
+              <div className="p-3 bg-powder-petal/60 dark:bg-wine-plum/60 rounded-xl border border-dust-grey/60 dark:border-smoky-rose/30 text-xs text-wine-plum dark:text-bone font-medium">
+                ✓ Precise GPS active for emergency assistance & navigation
               </div>
             </div>
           )}
@@ -132,14 +130,14 @@ export const OnboardingPage = () => {
           {/* Step 4: Explain SOS (3s hold) */}
           {step === 4 && (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto animate-pulse">
+              <div className="w-14 h-14 rounded-2xl bg-emergency/15 text-emergency flex items-center justify-center mx-auto animate-pulse">
                 <ShieldAlert className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-xl font-bold text-wine-plum dark:text-bone">
                 How the SOS Button Works
               </h3>
-              <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                To prevent accidental triggers, Rakshika requires a <strong>press-and-hold for 3 seconds</strong>. Once activated, your GPS coordinates and simulated alerts are broadcasted immediately.
+              <p className="text-xs text-dust-grey-dark dark:text-silver max-w-md mx-auto leading-relaxed">
+                To prevent accidental triggers, WeSafe requires a <strong>press-and-hold for 3 seconds</strong>. Once activated, your GPS coordinates and emergency SMS alerts are dispatched immediately.
               </p>
             </div>
           )}
@@ -147,20 +145,20 @@ export const OnboardingPage = () => {
           {/* Step 5: Notifications */}
           {step === 5 && (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-primary-600 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-powder-petal/80 dark:bg-wine-plum text-wine-plum dark:text-bone flex items-center justify-center mx-auto border border-dust-grey/50">
                 <Bell className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-xl font-bold text-wine-plum dark:text-bone">
                 Notification Preferences
               </h3>
-              <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                Get alerted when community hazards near your regular commute are resolved or when verified updates are posted.
+              <p className="text-xs text-dust-grey-dark dark:text-silver max-w-md mx-auto leading-relaxed">
+                Get alerted when hazards near your regular transit route are verified, repaired, or when community members post updates.
               </p>
             </div>
           )}
 
           {/* Navigation */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-dust-grey/40 dark:border-smoky-rose/20">
             {step > 1 ? (
               <Button variant="outline" onClick={() => setStep(prev => prev - 1)} icon={ArrowLeft}>
                 Back

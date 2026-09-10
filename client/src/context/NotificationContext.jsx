@@ -29,6 +29,10 @@ export const NotificationProvider = ({ children }) => {
     }, duration);
   };
 
+  const addNotification = ({ title, message, type = 'info' }) => {
+    showToast(`${title ? title + ': ' : ''}${message}`, type);
+  };
+
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
   return (
@@ -37,6 +41,7 @@ export const NotificationProvider = ({ children }) => {
       unreadCount,
       markAsRead,
       showToast,
+      addNotification,
       toasts
     }}>
       {children}
@@ -45,3 +50,4 @@ export const NotificationProvider = ({ children }) => {
 };
 
 export const useNotifications = () => useContext(NotificationContext);
+export const useNotification = useNotifications;

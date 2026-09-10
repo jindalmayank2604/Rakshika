@@ -12,15 +12,19 @@ import {
   Settings,
   ShieldCheck,
   LogOut,
-  Sparkles,
-  Shield
+  Navigation,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
+import { useTheme } from '../../context/ThemeContext';
+import { Shield3D } from '../ui/Illustrations3D';
 
 export const Sidebar = () => {
   const { user, logout, switchRole } = useAuth();
   const { unreadCount } = useNotifications();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -30,29 +34,29 @@ export const Sidebar = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Safety Map', path: '/map', icon: MapPin },
-    { name: 'Report Incident', path: '/report', icon: AlertTriangle },
+    { name: 'Safety Map & Routes', path: '/map', icon: MapPin },
+    { name: 'Report Hazard', path: '/report', icon: AlertTriangle },
     { name: 'My Reports', path: '/my-reports', icon: FileText },
-    { name: 'Emergency Contacts', path: '/contacts', icon: Users },
-    { name: 'Rakshika AI', path: '/ai-assistant', icon: Bot, highlight: true },
+    { name: 'Emergency Circle', path: '/contacts', icon: Users },
+    { name: 'WeSafe AI Assistant', path: '/ai-assistant', icon: Bot, highlight: true },
     { name: 'Notifications', path: '/notifications', icon: Bell, badge: unreadCount },
     { name: 'Profile', path: '/profile', icon: User },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 bg-white/80 backdrop-blur-xl border-r border-slate-200/70 p-4 justify-between select-none">
+    <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 glass-nav border-r border-dust-grey/60 dark:border-smoky-rose/30 p-4 justify-between select-none shadow-warm-sm">
       <div className="space-y-6">
         {/* Brand */}
-        <Link to="/dashboard" className="flex items-center gap-3 px-3 py-2">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary-700 via-primary-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-primary-500/25">
-            <Shield className="w-5 h-5" />
-          </div>
+        <Link to="/dashboard" className="flex items-center gap-3 px-2 py-1.5 group">
+          <Shield3D className="w-10 h-10 group-hover:scale-105 transition-transform" />
           <div>
-            <h1 className="text-lg font-extrabold text-slate-900 tracking-tight leading-none">
-              Rakshika
+            <h1 className="text-xl font-extrabold text-wine-plum dark:text-bone tracking-tight leading-none">
+              WeSafe
             </h1>
-            <p className="text-[11px] font-semibold text-primary-600 mt-1">Smart Safety Companion</p>
+            <p className="text-[10px] font-bold text-accent dark:text-almond-dark uppercase tracking-wider mt-1">
+              Protect. Prevent. Empower.
+            </p>
           </div>
         </Link>
 
@@ -65,15 +69,15 @@ export const Sidebar = () => {
                 key={item.name}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700 shadow-sm border border-primary-100'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                      ? 'bg-wine-plum text-bone dark:bg-bone dark:text-wine-plum shadow-md'
+                      : 'text-wine-plum/80 dark:text-bone/80 hover:text-wine-plum dark:hover:text-bone hover:bg-powder-petal/50 dark:hover:bg-smoky-rose/20'
                   }`
                 }
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 ${item.highlight ? 'text-primary-600' : ''}`} />
+                  <Icon className={`w-4 h-4 ${item.highlight ? 'text-accent dark:text-almond-dark' : ''}`} />
                   <span>{item.name}</span>
                 </div>
                 {item.badge > 0 && (
@@ -82,8 +86,8 @@ export const Sidebar = () => {
                   </span>
                 )}
                 {item.highlight && !item.badge && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-primary-100 text-primary-700">
-                    AI
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-accent/20 text-wine-plum dark:text-bone">
+                    Gemini AI
                   </span>
                 )}
               </NavLink>
@@ -97,51 +101,61 @@ export const Sidebar = () => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all ${
                   isActive
-                    ? 'bg-indigo-900 text-white shadow-md'
-                    : 'text-indigo-800 bg-indigo-50/70 hover:bg-indigo-100'
+                    ? 'bg-wine-plum text-bone shadow-md'
+                    : 'text-wine-plum dark:text-bone bg-powder-petal/50 dark:bg-wine-plum/60 hover:bg-powder-petal'
                 }`
               }
             >
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 text-accent" />
               <span>Admin Portal</span>
             </NavLink>
           ) : (
             <div className="pt-2">
               <button
                 onClick={() => switchRole('admin')}
-                className="w-full text-left flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-primary-700 hover:bg-slate-50 border border-dashed border-slate-200 transition-colors"
+                className="w-full text-left flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-dust-grey-dark dark:text-silver hover:text-wine-plum dark:hover:text-bone hover:bg-powder-petal/30 border border-dashed border-dust-grey/70 dark:border-smoky-rose/30 transition-colors"
                 title="Switch to demo admin reviewer"
               >
                 <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-accent" />
                   <span>View Admin Portal</span>
                 </span>
-                <span className="text-[10px] bg-slate-200/80 px-1.5 py-0.5 rounded text-slate-700">Demo</span>
+                <span className="text-[10px] bg-dust-grey/60 dark:bg-smoky-rose/30 px-1.5 py-0.5 rounded text-wine-plum dark:text-bone">Demo</span>
               </button>
             </div>
           )}
         </nav>
       </div>
 
-      {/* User Card & Logout */}
-      <div className="pt-4 border-t border-slate-200/70 space-y-3">
-        <div className="flex items-center justify-between px-2">
+      {/* User Card, Theme Toggle & Logout */}
+      <div className="pt-4 border-t border-dust-grey/50 dark:border-smoky-rose/30 space-y-3">
+        <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary-400 to-teal-400 flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-wine-plum to-smoky-rose flex items-center justify-center text-bone font-bold text-sm shadow-sm flex-shrink-0">
               {user?.name ? user.name[0].toUpperCase() : 'P'}
             </div>
             <div className="truncate">
-              <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Priya Sharma'}</p>
-              <p className="text-[10px] text-slate-500 capitalize">{user?.role || 'user'} Account</p>
+              <p className="text-xs font-bold text-wine-plum dark:text-bone truncate">{user?.name || 'Priya Sharma'}</p>
+              <p className="text-[10px] text-dust-grey-dark dark:text-silver capitalize">{user?.role || 'user'} Account</p>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-            title="Log out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg text-wine-plum dark:text-bone hover:bg-powder-petal/50 dark:hover:bg-smoky-rose/30 transition-colors"
+              title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+            >
+              {isDark ? <Sun className="w-4 h-4 text-almond-dark" /> : <Moon className="w-4 h-4 text-wine-plum" />}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-1.5 rounded-lg text-dust-grey-dark dark:text-silver hover:text-emergency hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+              title="Log out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </aside>

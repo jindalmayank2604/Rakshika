@@ -11,30 +11,30 @@ export const EmergencyContactCard = ({
   onSmsSimulate
 }) => {
   return (
-    <GlassCard className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <GlassCard className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-sm">
       <div className="flex items-center gap-3.5">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-500 text-white font-extrabold text-lg flex items-center justify-center shadow-md shadow-primary-500/20 flex-shrink-0">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-wine-plum to-smoky-rose text-bone font-extrabold text-lg flex items-center justify-center shadow-md shadow-wine-plum/20 flex-shrink-0">
           {contact.name[0]}
         </div>
 
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold text-slate-900">{contact.name}</h4>
+            <h4 className="text-sm font-bold text-wine-plum dark:text-bone">{contact.name}</h4>
             {contact.is_primary && (
-              <Badge variant="primary" size="xs">
-                <Star className="w-2.5 h-2.5 fill-current" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-powder-petal dark:bg-wine-plum text-[10px] font-bold text-wine-plum dark:text-bone border border-dust-grey/60 dark:border-smoky-rose/30">
+                <Star className="w-2.5 h-2.5 fill-current text-accent" />
                 Primary SOS
-              </Badge>
+              </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 font-medium">{contact.relationship} • {contact.phone}</p>
+          <p className="text-xs text-dust-grey-dark dark:text-silver font-medium">{contact.relationship} • {contact.phone}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-2 self-end sm:self-center">
         <button
           onClick={() => onCallSimulate(contact)}
-          className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+          className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition-colors"
           title={`Call ${contact.name}`}
           aria-label={`Call ${contact.name}`}
         >
@@ -43,7 +43,7 @@ export const EmergencyContactCard = ({
 
         <button
           onClick={() => onSmsSimulate(contact)}
-          className="p-2.5 rounded-xl bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors"
+          className="p-2.5 rounded-xl bg-powder-petal/60 dark:bg-wine-plum/60 text-wine-plum dark:text-bone hover:bg-powder-petal transition-colors"
           title={`Send test SOS SMS to ${contact.name}`}
           aria-label={`Send test SOS SMS to ${contact.name}`}
         >
@@ -53,7 +53,7 @@ export const EmergencyContactCard = ({
         {onDelete && (
           <button
             onClick={() => onDelete(contact.id)}
-            className="p-2.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+            className="p-2.5 rounded-xl text-dust-grey-dark dark:text-silver hover:text-emergency hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
             title="Delete contact"
             aria-label="Delete contact"
           >
