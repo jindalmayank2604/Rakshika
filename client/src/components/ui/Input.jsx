@@ -32,7 +32,7 @@ export const Input = ({
         <input
           id={inputId}
           type={inputType}
-          className={`w-full bg-white/90 backdrop-blur-sm border rounded-xl py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
+          className={`glass-input w-full backdrop-blur-sm border rounded-xl py-2.5 text-sm placeholder:text-dust-grey-dark dark:placeholder:text-silver focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
             Icon ? 'pl-10' : 'pl-3.5'
           } ${isPassword ? 'pr-10' : 'pr-3.5'} ${
             error ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20' : 'border-slate-200 hover:border-slate-300'

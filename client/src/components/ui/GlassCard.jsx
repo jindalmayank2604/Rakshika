@@ -11,14 +11,14 @@ export const GlassCard = ({
   const baseClasses = 'backdrop-blur-md rounded-2xl border transition-all duration-300';
   
   const variants = {
-    default: 'bg-white/75 border-white/80 shadow-glass',
-    subtle: 'bg-white/50 border-white/50 shadow-sm',
-    solid: 'bg-white/95 border-slate-100 shadow-card',
-    emergency: 'bg-rose-50/80 border-rose-200/80 shadow-emergency-glow',
-    indigo: 'bg-indigo-50/70 border-indigo-100 shadow-sm'
+    default: 'glass-card',
+    subtle: 'glass-card-subtle',
+    solid: 'glass-card-solid',
+    emergency: 'glass-card-emergency',
+    indigo: 'glass-card-accent'
   };
 
-  const hoverClasses = hoverEffect ? 'hover:-translate-y-1 hover:shadow-glass-hover hover:bg-white/85 cursor-pointer' : '';
+  const hoverClasses = hoverEffect ? 'glass-card-hover hover:-translate-y-1 cursor-pointer' : '';
 
   return (
     <div

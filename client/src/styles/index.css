@@ -55,6 +55,25 @@
   box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.35);
 }
 
+.glass-card-solid {
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 22px -8px rgba(109, 46, 70, 0.16);
+}
+
+.dark .glass-card-solid {
+  background: rgba(76, 43, 44, 0.95);
+  border-color: rgba(162, 103, 105, 0.42);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+}
+
+.glass-card-emergency { background: rgba(254, 226, 226, 0.8); border: 1px solid rgba(185, 28, 28, 0.22); }
+.dark .glass-card-emergency { background: rgba(127, 29, 29, 0.34); border-color: rgba(252, 165, 165, 0.28); }
+.glass-card-accent { background: rgba(227, 213, 202, 0.72); border: 1px solid rgba(214, 204, 194, 0.8); }
+.dark .glass-card-accent { background: rgba(109, 46, 70, 0.72); border-color: rgba(162, 103, 105, 0.35); }
+.glass-card-hover:hover { background: rgba(227, 213, 202, 0.78); box-shadow: 0 14px 34px -8px rgba(109, 46, 70, 0.2); }
+.dark .glass-card-hover:hover { background: rgba(140, 82, 84, 0.62); box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.5); }
+
 .glass-card-subtle {
   background: rgba(237, 237, 233, 0.65);
   backdrop-filter: blur(12px);
@@ -95,6 +114,23 @@
   backdrop-filter: blur(8px);
   border: 1px solid rgba(162, 103, 105, 0.5);
   color: #ece2d0;
+}
+
+/* Legacy utility surfaces: ensure dark mode cannot fall back to pale light-mode cards. */
+.dark [class*="bg-white"],
+.dark [class*="bg-parchment"],
+.dark [class*="bg-linen"],
+.dark [class*="bg-powder-petal"],
+.dark [class*="bg-almond-silk"] {
+  background-color: rgba(109, 46, 70, 0.88) !important;
+}
+
+.dark [class*="hover:bg-white"]:hover,
+.dark [class*="hover:bg-parchment"]:hover,
+.dark [class*="hover:bg-powder-petal"]:hover,
+.dark [class*="hover:bg-almond-silk"]:hover {
+  background-color: rgba(140, 82, 84, 0.84) !important;
+  color: #ece2d0 !important;
 }
 
 .glass-input:focus {

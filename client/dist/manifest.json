@@ -1,6 +1,6 @@
 {
-  "short_name": "Rakshika",
-  "name": "Rakshika — Women's Safety & Empowerment",
+  "short_name": "WeSafe",
+  "name": "WeSafe — AI-Powered Community Safety Platform",
   "icons": [
     {
       "src": "/shield.svg",
@@ -9,10 +9,10 @@
     }
   ],
   "start_url": "/",
-  "background_color": "#FAF8FF",
-  "theme_color": "#6366F1",
+  "background_color": "#f5ebe0",
+  "theme_color": "#6d2e46",
   "display": "standalone",
   "orientation": "portrait",
   "categories": ["lifestyle", "utilities", "safety"],
-  "description": "Smart AI-powered safety companion for proactive journey protection and community awareness."
+  "description": "Protect. Prevent. Empower. Smart community safety platform combining location intelligence and Gemini AI."
 }
