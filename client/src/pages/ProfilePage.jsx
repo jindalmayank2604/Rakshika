@@ -7,20 +7,54 @@ import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 
 export const ProfilePage = () => {
-  const { user, updateProfileData } = useAuth();
+  const { user, isGuest, updateProfileData } = useAuth();
   const { showToast } = useNotifications();
 
   const [formData, setFormData] = useState({
-    name: user?.name || 'Priya Sharma',
-    email: user?.email || 'priya@example.com',
-    phone: user?.phone || '+91 98123 45678'
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || ''
   });
 
-  const handleSubmit = (e) => {
+  // Sync state if user loads asynchronously
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || ''
+      });
+    }
+  }, [user]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateProfileData(formData);
-    showToast('WeSafe profile details updated successfully.', 'success');
+    try {
+      await updateProfileData(formData);
+      showToast('WeSafe profile details updated successfully.', 'success');
+    } catch (err) {
+      showToast('Failed to update profile. Please try again.', 'danger');
+    }
   };
+
+  if (isGuest || !user) {
+    return (
+      <div className="max-w-md mx-auto py-12 text-center space-y-4">
+        <GlassCard className="p-8 space-y-4 border border-dust-grey/60 dark:border-smoky-rose/30">
+          <h3 className="text-xl font-bold text-wine-plum dark:text-bone">Profile Access</h3>
+          <p className="text-xs text-dust-grey-dark dark:text-silver">
+            Please log in or register to access and manage your profile settings.
+          </p>
+          <div className="pt-2">
+            <a href="/login" className="inline-block px-4 py-2 rounded-xl bg-wine-plum text-bone text-xs font-bold">
+              Sign In
+            </a>
+          </div>
+        </GlassCard>
+      </div>
+    );
+  }
+
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-16">

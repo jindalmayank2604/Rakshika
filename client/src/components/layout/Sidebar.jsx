@@ -12,7 +12,7 @@ import {
   Settings,
   ShieldCheck,
   LogOut,
-  Navigation,
+  LogIn,
   Moon,
   Sun
 } from 'lucide-react';
@@ -22,14 +22,14 @@ import { useTheme } from '../../context/ThemeContext';
 import { Shield3D } from '../ui/Illustrations3D';
 
 export const Sidebar = () => {
-  const { user, logout, switchRole } = useAuth();
+  const { user, isGuest, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
   };
 
   const navItems = [
@@ -94,8 +94,8 @@ export const Sidebar = () => {
             );
           })}
 
-          {/* Admin Navigation */}
-          {user?.role === 'admin' ? (
+          {/* Real Admin Navigation - Only visible to authenticated admins */}
+          {user?.role === 'admin' && (
             <NavLink
               to="/admin"
               className={({ isActive }) =>
@@ -109,36 +109,34 @@ export const Sidebar = () => {
               <ShieldCheck className="w-4 h-4 text-accent" />
               <span>Admin Portal</span>
             </NavLink>
-          ) : (
-            <div className="pt-2">
-              <button
-                onClick={() => switchRole('admin')}
-                className="w-full text-left flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-dust-grey-dark dark:text-silver hover:text-wine-plum dark:hover:text-bone hover:bg-powder-petal/30 border border-dashed border-dust-grey/70 dark:border-smoky-rose/30 transition-colors"
-                title="Switch to demo admin reviewer"
-              >
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-                  <span>View Admin Portal</span>
-                </span>
-                <span className="text-[10px] bg-dust-grey/60 dark:bg-smoky-rose/30 px-1.5 py-0.5 rounded text-wine-plum dark:text-bone">Demo</span>
-              </button>
-            </div>
           )}
         </nav>
       </div>
 
-      {/* User Card, Theme Toggle & Logout */}
+      {/* User Card, Theme Toggle & Logout/Login */}
       <div className="pt-4 border-t border-dust-grey/50 dark:border-smoky-rose/30 space-y-3">
         <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-wine-plum to-smoky-rose flex items-center justify-center text-bone font-bold text-sm shadow-sm flex-shrink-0">
-              {user?.name ? user.name[0].toUpperCase() : 'P'}
+          {user ? (
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-wine-plum to-smoky-rose flex items-center justify-center text-bone font-bold text-sm shadow-sm flex-shrink-0">
+                {user.name ? user.name[0].toUpperCase() : 'U'}
+              </div>
+              <div className="truncate">
+                <p className="text-xs font-bold text-wine-plum dark:text-bone truncate">{user.name}</p>
+                <p className="text-[10px] text-dust-grey-dark dark:text-silver capitalize">{user.role} Account</p>
+              </div>
             </div>
-            <div className="truncate">
-              <p className="text-xs font-bold text-wine-plum dark:text-bone truncate">{user?.name || 'Priya Sharma'}</p>
-              <p className="text-[10px] text-dust-grey-dark dark:text-silver capitalize">{user?.role || 'user'} Account</p>
+          ) : (
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-dust-grey/60 dark:bg-smoky-rose/40 flex items-center justify-center text-wine-plum dark:text-bone font-bold text-xs flex-shrink-0">
+                G
+              </div>
+              <div className="truncate">
+                <p className="text-xs font-bold text-wine-plum dark:text-bone">Guest User</p>
+                <p className="text-[10px] text-dust-grey-dark dark:text-silver">Read-only Map View</p>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex items-center gap-1">
             <button
@@ -148,16 +146,27 @@ export const Sidebar = () => {
             >
               {isDark ? <Sun className="w-4 h-4 text-almond-dark" /> : <Moon className="w-4 h-4 text-wine-plum" />}
             </button>
-            <button
-              onClick={handleLogout}
-              className="p-1.5 rounded-lg text-dust-grey-dark dark:text-silver hover:text-emergency hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-              title="Log out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="p-1.5 rounded-lg text-dust-grey-dark dark:text-silver hover:text-emergency hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                title="Log out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="p-1.5 rounded-lg text-wine-plum dark:text-bone hover:bg-powder-petal/60 transition-colors"
+                title="Sign In"
+              >
+                <LogIn className="w-4 h-4 text-accent" />
+              </button>
+            )}
           </div>
         </div>
       </div>
     </aside>
   );
 };
+

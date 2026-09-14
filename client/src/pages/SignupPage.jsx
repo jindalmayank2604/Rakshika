@@ -53,10 +53,10 @@ export const SignupPage = () => {
     setLoading(true);
     try {
       await register(formData.name, formData.email, formData.phone, formData.password);
-      showToast('Account created! Let us set up your emergency circle.', 'success');
-      navigate('/onboarding');
+      showToast('Account created! Welcome to WeSafe.', 'success');
+      navigate('/dashboard');
     } catch (err) {
-      showToast('Registration error. Please verify your details.', 'danger');
+      showToast(err.message || 'Registration error. Please verify your details.', 'danger');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export const SignupPage = () => {
             <Input
               label="Full Name"
               type="text"
-              placeholder="Priya Sharma"
+              placeholder="Your full name"
               icon={User}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -95,7 +95,7 @@ export const SignupPage = () => {
             <Input
               label="Email Address"
               type="email"
-              placeholder="priya@example.com"
+              placeholder="yourname@example.com"
               icon={Mail}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -105,7 +105,7 @@ export const SignupPage = () => {
             <Input
               label="Phone Number"
               type="tel"
-              placeholder="+91 98123 45678"
+              placeholder="+91 98765 43210"
               icon={Phone}
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}

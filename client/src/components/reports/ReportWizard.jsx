@@ -24,10 +24,13 @@ import { INCIDENT_CATEGORIES } from '../../data/mockData';
 import { apiService } from '../../services/api';
 import { useSafety } from '../../context/SafetyContext';
 import { useNotifications } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
 import { Success3DIllustration } from '../../assets/illustrations/3DIllustrations';
 import { CommunityReport3D } from '../ui/Illustrations3D';
+import { Link } from 'react-router-dom';
 
 export const ReportWizard = ({ onComplete }) => {
+  const { user, isGuest } = useAuth();
   const { addReport, currentLocation } = useSafety();
   const { showToast } = useNotifications();
 
@@ -48,6 +51,37 @@ export const ReportWizard = ({ onComplete }) => {
   });
 
   const [submittedReport, setSubmittedReport] = useState(null);
+
+  // If Guest or not authenticated, prompt to Sign In / Create Account
+  if (!user || isGuest) {
+    return (
+      <GlassCard className="p-8 sm:p-12 text-center max-w-xl mx-auto space-y-6 border border-dust-grey/60 dark:border-smoky-rose/30 shadow-warm-lg">
+        <CommunityReport3D className="w-24 h-24 mx-auto" />
+        <div className="space-y-2">
+          <h3 className="text-xl font-black text-wine-plum dark:text-bone">
+            Sign in to submit a community safety report.
+          </h3>
+          <p className="text-xs sm:text-sm text-dust-grey-dark dark:text-silver max-w-md mx-auto leading-relaxed">
+            To ensure report integrity and prevent spam, community safety hazards must be linked to a verified account.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <Link to="/login" className="w-full sm:w-auto">
+            <Button variant="primary" className="w-full justify-center">
+              Sign In to Your Account
+            </Button>
+          </Link>
+          <Link to="/signup" className="w-full sm:w-auto">
+            <Button variant="outline" className="w-full justify-center">
+              Create New Account
+            </Button>
+          </Link>
+        </div>
+      </GlassCard>
+    );
+  }
+
 
   const iconMap = {
     SunMedium,

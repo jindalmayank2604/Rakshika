@@ -5,27 +5,44 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Initialize Auth State from API / session
   useEffect(() => {
-    const storedUser = apiService.getCurrentUser();
-    if (storedUser) {
-      setUser(storedUser);
-    } else {
-      // Default demo user initialized for rich seamless review
-      const demoUser = {
-        id: 2,
-        name: 'Priya Sharma',
-        email: 'priya@example.com',
-        phone: '+91 98123 45678',
-        role: 'user',
-        profile_image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80'
-      };
-      localStorage.setItem('rakshika_user', JSON.stringify(demoUser));
-      localStorage.setItem('rakshika_token', 'demo_active_token');
-      setUser(demoUser);
-    }
-    setLoading(false);
+    const initAuth = async () => {
+      try {
+        const guestFlag = localStorage.getItem('rakshika_guest');
+        if (guestFlag === 'true') {
+          setIsGuest(true);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        // Check if cached user or token exists
+        const cachedUser = apiService.getCurrentUser();
+        if (cachedUser) {
+          setUser(cachedUser);
+        }
+
+        // Verify with backend /me endpoint
+        const freshUser = await apiService.getMe();
+        if (freshUser) {
+          setUser(freshUser);
+          setIsGuest(false);
+        } else if (!cachedUser) {
+          // No user logged in
+          setUser(null);
+        }
+      } catch (err) {
+        console.warn('Auth session check notice:', err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
   }, []);
 
   const login = async (email, password) => {
@@ -33,6 +50,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await apiService.login(email, password);
       setUser(res.user);
+      setIsGuest(false);
       return res;
     } finally {
       setLoading(false);
@@ -44,39 +62,58 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await apiService.register(name, email, phone, password);
       setUser(res.user);
+      setIsGuest(false);
       return res;
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = () => {
-    apiService.logout();
+  const logout = async () => {
+    await apiService.logout();
     setUser(null);
+    setIsGuest(false);
   };
 
-  const updateProfileData = (updatedFields) => {
-    const updated = { ...user, ...updatedFields };
-    setUser(updated);
-    localStorage.setItem('rakshika_user', JSON.stringify(updated));
+  const continueAsGuest = () => {
+    localStorage.setItem('rakshika_guest', 'true');
+    localStorage.removeItem('rakshika_token');
+    localStorage.removeItem('rakshika_user');
+    setUser(null);
+    setIsGuest(true);
   };
 
-  const switchRole = (role) => {
-    const updated = {
-      ...user,
-      role,
-      name: role === 'admin' ? 'Rakshika Admin' : 'Priya Sharma',
-      email: role === 'admin' ? 'admin@rakshika.org' : 'priya@example.com'
-    };
-    setUser(updated);
-    localStorage.setItem('rakshika_user', JSON.stringify(updated));
+  const updateProfileData = async (updatedFields) => {
+    try {
+      const updatedUser = await apiService.updateProfile(updatedFields);
+      setUser(updatedUser);
+      return updatedUser;
+    } catch (err) {
+      // Fallback local update if offline
+      const updated = { ...user, ...updatedFields };
+      setUser(updated);
+      localStorage.setItem('rakshika_user', JSON.stringify(updated));
+      return updated;
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfileData, switchRole }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isGuest, 
+      isAuthenticated: Boolean(user),
+      isAdmin: user?.role === 'admin',
+      loading, 
+      login, 
+      register, 
+      logout, 
+      continueAsGuest, 
+      updateProfileData 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+

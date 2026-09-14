@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, ShieldCheck, User, Sparkles, Navigation, Moon, Sun, AlertTriangle } from 'lucide-react';
+import { Bell, ShieldCheck, User, Sparkles, Navigation, Moon, Sun, AlertTriangle, LogIn } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { useSafety } from '../../context/SafetyContext';
@@ -8,7 +8,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Shield3D } from '../ui/Illustrations3D';
 
 export const AppHeader = ({ onOpenSOS }) => {
-  const { user, switchRole } = useAuth();
+  const { user, isGuest } = useAuth();
   const { unreadCount, notifications, markAsRead } = useNotifications();
   const { safetyScore, currentLocation } = useSafety();
   const { isDark, toggleTheme } = useTheme();
@@ -106,16 +106,25 @@ export const AppHeader = ({ onOpenSOS }) => {
           )}
         </div>
 
-        {/* Demo Switch role */}
-        <button
-          onClick={() => switchRole(user?.role === 'admin' ? 'user' : 'admin')}
-          className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-powder-petal/70 dark:bg-wine-plum/70 hover:bg-powder-petal text-wine-plum dark:text-bone text-xs font-semibold border border-dust-grey/60 dark:border-smoky-rose/30 transition-colors"
-          title="Toggle user/admin mode for demonstration"
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-          <span>{user?.role === 'admin' ? 'Admin' : 'User'} Mode</span>
-        </button>
+        {/* User / Guest Status */}
+        {user ? (
+          <div className="hidden md:flex items-center gap-2 pl-2 border-l border-dust-grey/60 dark:border-smoky-rose/30">
+            <span className="text-xs font-bold text-wine-plum dark:text-bone">{user.name}</span>
+            {user.role === 'admin' && (
+              <span className="px-2 py-0.5 rounded-full bg-accent/20 text-wine-plum dark:text-bone text-[10px] font-bold">Admin</span>
+            )}
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-wine-plum text-bone dark:bg-bone dark:text-wine-plum text-xs font-bold hover:opacity-90 transition-opacity shadow-sm"
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span>Sign In</span>
+          </Link>
+        )}
       </div>
     </header>
   );
 };
+

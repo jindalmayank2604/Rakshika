@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, UserCheck } from 'lucide-react';
 import { GlassCard } from '../components/ui/GlassCard';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -9,30 +9,36 @@ import { useNotifications } from '../context/NotificationContext';
 import { Shield3D } from '../components/ui/Illustrations3D';
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('priya@example.com');
-  const [password, setPassword] = useState('Password123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, continueAsGuest } = useAuth();
   const { showToast } = useNotifications();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      showToast('Please enter both email and password.', 'danger');
+      return;
+    }
+
     setLoading(true);
     try {
       await login(email, password);
       showToast('Welcome back to WeSafe!', 'success');
       navigate('/dashboard');
     } catch (err) {
-      showToast('Invalid credentials. Please try again.', 'danger');
+      showToast(err.message || 'Invalid email or password. Please try again.', 'danger');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickDemoAdmin = () => {
-    setEmail('admin@wesafe.org');
-    setPassword('Password123!');
+  const handleGuestAccess = () => {
+    continueAsGuest();
+    showToast('Browsing as Guest. Sign in anytime to submit hazard reports.', 'info');
+    navigate('/map');
   };
 
   return (
@@ -97,28 +103,16 @@ export const LoginPage = () => {
             </Button>
           </form>
 
-          {/* Demo Login Shortcuts */}
-          <div className="pt-4 border-t border-dust-grey/40 dark:border-smoky-rose/20 text-center space-y-2">
-            <p className="text-[11px] font-bold text-dust-grey-dark dark:text-silver uppercase tracking-wider">Demo Quick Access</p>
-            <div className="flex items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail('priya@example.com');
-                  setPassword('Password123!');
-                }}
-                className="px-2.5 py-1 rounded-lg bg-powder-petal/80 dark:bg-wine-plum/60 hover:bg-powder-petal text-wine-plum dark:text-bone text-xs font-semibold transition-colors border border-dust-grey/50"
-              >
-                Commuter (Priya)
-              </button>
-              <button
-                type="button"
-                onClick={handleQuickDemoAdmin}
-                className="px-2.5 py-1 rounded-lg bg-powder-petal/80 dark:bg-wine-plum/60 hover:bg-powder-petal text-wine-plum dark:text-bone text-xs font-semibold transition-colors border border-dust-grey/50"
-              >
-                Admin Reviewer
-              </button>
-            </div>
+          {/* Guest Browsing Link */}
+          <div className="pt-3 border-t border-dust-grey/40 dark:border-smoky-rose/20 text-center">
+            <button
+              type="button"
+              onClick={handleGuestAccess}
+              className="w-full py-2 px-3 rounded-xl border border-dust-grey/60 dark:border-smoky-rose/30 hover:bg-powder-petal/50 dark:hover:bg-wine-plum/40 text-wine-plum dark:text-bone text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-accent" />
+              <span>Continue as Guest (Explore Map)</span>
+            </button>
           </div>
 
           <p className="text-center text-xs text-dust-grey-dark dark:text-silver">
@@ -132,3 +126,4 @@ export const LoginPage = () => {
     </div>
   );
 };
+

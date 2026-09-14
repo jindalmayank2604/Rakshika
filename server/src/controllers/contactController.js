@@ -1,26 +1,17 @@
-import pool from '../config/db.js';
-
-let memoryContacts = [
-  { id: 1, user_id: 2, name: 'Ananya Sharma', phone: '+91 9823456789', relationship: 'Sister', is_primary: true },
-  { id: 2, user_id: 2, name: 'Vikram Sharma', phone: '+91 9834567890', relationship: 'Father', is_primary: false },
-  { id: 3, user_id: 2, name: 'Dr. Meera Sen', phone: '+91 9845678901', relationship: 'Friend / Mentor', is_primary: false }
-];
+import { query } from '../config/db.js';
 
 export const getContacts = async (req, res, next) => {
   try {
-    const userId = req.user ? req.user.id : 2;
+    const userId = req.user.id;
+    const result = await query(
+      'SELECT * FROM emergency_contacts WHERE user_id = $1 ORDER BY is_primary DESC, created_at DESC',
+      [userId]
+    );
 
-    if (pool) {
-      try {
-        const [rows] = await pool.query('SELECT * FROM emergency_contacts WHERE user_id = ? ORDER BY is_primary DESC, created_at DESC', [userId]);
-        if (rows.length > 0) return res.status(200).json({ success: true, data: rows });
-      } catch (dbErr) {
-        console.warn('DB GetContacts fallback:', dbErr.message);
-      }
-    }
-
-    const contacts = memoryContacts.filter(c => c.user_id === userId);
-    return res.status(200).json({ success: true, data: contacts });
+    return res.status(200).json({
+      success: true,
+      data: result.rows
+    });
   } catch (error) {
     next(error);
   }
@@ -28,35 +19,29 @@ export const getContacts = async (req, res, next) => {
 
 export const addContact = async (req, res, next) => {
   try {
-    const userId = req.user ? req.user.id : 2;
+    const userId = req.user.id;
     const { name, phone, relationship, is_primary } = req.body;
 
     if (!name || !phone || !relationship) {
       return res.status(400).json({ success: false, message: 'Name, phone, and relationship are required.' });
     }
 
+    // If setting as primary, demote others
     if (is_primary) {
-      memoryContacts.forEach(c => {
-        if (c.user_id === userId) c.is_primary = false;
-      });
+      await query('UPDATE emergency_contacts SET is_primary = FALSE WHERE user_id = $1', [userId]);
     }
 
-    const newContact = {
-      id: memoryContacts.length + 1,
-      user_id: userId,
-      name,
-      phone,
-      relationship,
-      is_primary: Boolean(is_primary) || memoryContacts.filter(c => c.user_id === userId).length === 0,
-      created_at: new Date().toISOString()
-    };
-
-    memoryContacts.push(newContact);
+    const result = await query(
+      `INSERT INTO emergency_contacts (user_id, name, phone, relationship, is_primary)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [userId, name.trim(), phone.trim(), relationship.trim(), Boolean(is_primary)]
+    );
 
     return res.status(201).json({
       success: true,
       message: 'Emergency contact added successfully.',
-      data: newContact
+      data: result.rows[0]
     });
   } catch (error) {
     next(error);
@@ -66,29 +51,32 @@ export const addContact = async (req, res, next) => {
 export const updateContact = async (req, res, next) => {
   try {
     const contactId = parseInt(req.params.id, 10);
-    const userId = req.user ? req.user.id : 2;
+    const userId = req.user.id;
     const { name, phone, relationship, is_primary } = req.body;
 
-    const contact = memoryContacts.find(c => c.id === contactId);
-    if (!contact) {
-      return res.status(404).json({ success: false, message: 'Contact not found.' });
-    }
-
     if (is_primary) {
-      memoryContacts.forEach(c => {
-        if (c.user_id === userId) c.is_primary = false;
-      });
+      await query('UPDATE emergency_contacts SET is_primary = FALSE WHERE user_id = $1', [userId]);
     }
 
-    if (name) contact.name = name;
-    if (phone) contact.phone = phone;
-    if (relationship) contact.relationship = relationship;
-    if (is_primary !== undefined) contact.is_primary = is_primary;
+    const result = await query(
+      `UPDATE emergency_contacts 
+       SET name = COALESCE($1, name),
+           phone = COALESCE($2, phone),
+           relationship = COALESCE($3, relationship),
+           is_primary = COALESCE($4, is_primary)
+       WHERE id = $5 AND user_id = $6
+       RETURNING *`,
+      [name, phone, relationship, is_primary !== undefined ? Boolean(is_primary) : null, contactId, userId]
+    );
+
+    if (!result.rows || result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Contact not found or unauthorized.' });
+    }
 
     return res.status(200).json({
       success: true,
       message: 'Contact updated successfully.',
-      data: contact
+      data: result.rows[0]
     });
   } catch (error) {
     next(error);
@@ -98,13 +86,13 @@ export const updateContact = async (req, res, next) => {
 export const deleteContact = async (req, res, next) => {
   try {
     const contactId = parseInt(req.params.id, 10);
-    const index = memoryContacts.findIndex(c => c.id === contactId);
+    const userId = req.user.id;
 
-    if (index === -1) {
-      return res.status(404).json({ success: false, message: 'Contact not found.' });
+    const result = await query('DELETE FROM emergency_contacts WHERE id = $1 AND user_id = $2 RETURNING id', [contactId, userId]);
+
+    if (!result.rows || result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Contact not found or unauthorized.' });
     }
-
-    memoryContacts.splice(index, 1);
 
     return res.status(200).json({
       success: true,
@@ -114,3 +102,4 @@ export const deleteContact = async (req, res, next) => {
     next(error);
   }
 };
+
