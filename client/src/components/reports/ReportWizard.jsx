@@ -136,15 +136,34 @@ export const ReportWizard = ({ onComplete }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      if (!formData.title || !formData.description) {
+        showToast('Please provide an incident title and detailed description.', 'danger');
+        setLoading(false);
+        return;
+      }
+
+      const lat = parseFloat(formData.latitude);
+      const lng = parseFloat(formData.longitude);
+      if (isNaN(lat) || isNaN(lng)) {
+        showToast('Location coordinates are invalid or missing.', 'danger');
+        setLoading(false);
+        return;
+      }
+
       const created = await addReport({
         ...formData,
+        latitude: lat,
+        longitude: lng,
+        address: formData.address || `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`,
         ai_summary: aiSuggestion?.summary || 'WeSafe community hazard logged.'
       });
+
       setSubmittedReport(created);
       setStep(6); // Success Step
       showToast('Thank you! Your report has been submitted to keep our community safe.', 'success');
     } catch (e) {
-      showToast('Failed to submit report. Please try again.', 'danger');
+      console.error('Hazard report submission error:', e);
+      showToast(e.message || 'Failed to submit report. Please try again.', 'danger');
     } finally {
       setLoading(false);
     }
@@ -167,6 +186,7 @@ export const ReportWizard = ({ onComplete }) => {
         <div className="p-4 rounded-2xl bg-powder-petal/50 dark:bg-wine-plum/50 border border-dust-grey/60 dark:border-smoky-rose/30 text-left text-xs text-wine-plum dark:text-bone space-y-1.5">
           <p><strong>Report Title:</strong> {formData.title}</p>
           <p><strong>Category:</strong> {formData.category}</p>
+          <p><strong>Location:</strong> {formData.address || `${parseFloat(formData.latitude).toFixed(4)}°, ${parseFloat(formData.longitude).toFixed(4)}°`}</p>
           <p><strong>Status:</strong> <span className="text-emerald-700 dark:text-emerald-400 font-bold">Submitted (Under Review)</span></p>
         </div>
 
@@ -330,8 +350,13 @@ export const ReportWizard = ({ onComplete }) => {
           <LocationPickerMap
             initialLat={formData.latitude}
             initialLng={formData.longitude}
-            onLocationChange={(lat, lng) => {
-              setFormData(prev => ({ ...prev, latitude: lat, longitude: lng }));
+            onLocationChange={(lat, lng, address) => {
+              setFormData(prev => ({
+                ...prev,
+                latitude: lat,
+                longitude: lng,
+                address: address || prev.address || `${parseFloat(lat).toFixed(4)}°, ${parseFloat(lng).toFixed(4)}°`
+              }));
             }}
           />
         </div>
@@ -412,9 +437,15 @@ export const ReportWizard = ({ onComplete }) => {
               <span className="text-dust-grey-dark dark:text-silver font-medium">Severity:</span>
               <span className="font-bold text-emergency">{formData.severity}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span className="text-dust-grey-dark dark:text-silver font-medium">Location:</span>
-              <span className="font-bold text-wine-plum dark:text-bone truncate max-w-[240px]">{formData.address}</span>
+              <span className="font-bold text-wine-plum dark:text-bone truncate max-w-[240px]">
+                {formData.address && formData.address.trim()
+                  ? formData.address
+                  : (formData.latitude && formData.longitude
+                      ? `${parseFloat(formData.latitude).toFixed(4)}°, ${parseFloat(formData.longitude).toFixed(4)}°`
+                      : 'Coordinates Captured')}
+              </span>
             </div>
             <div className="pt-2 border-t border-dust-grey/40 dark:border-smoky-rose/20">
               <span className="text-dust-grey-dark dark:text-silver font-medium">Description:</span>

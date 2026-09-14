@@ -1,6 +1,4 @@
-import { INITIAL_REPORTS, INITIAL_CONTACTS, INITIAL_NOTIFICATIONS } from '../data/mockData';
-
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 // Helper to get stored auth token
 const getAuthHeaders = () => {
@@ -151,17 +149,24 @@ export const apiService = {
   },
 
   async createReport(reportData) {
-    const res = await fetch(`${API_BASE}/reports`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      credentials: 'include',
-      body: JSON.stringify(reportData)
-    });
-    const data = await res.json();
-    if (!res.ok || !data.success) {
-      throw new Error(data.message || 'Failed to submit report. Please log in first.');
+    try {
+      const res = await fetch(`${API_BASE}/reports`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify(reportData)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Failed to submit report. Authentication or validation issue.');
+      }
+      return data.data;
+    } catch (err) {
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        throw new Error('Server unavailable. Please verify backend service connection.');
+      }
+      throw err;
     }
-    return data.data;
   },
 
   async createIncident(incidentData) {

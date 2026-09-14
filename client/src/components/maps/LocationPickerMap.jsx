@@ -38,26 +38,45 @@ const MapEvents = ({ onLocationSelect }) => {
 export const LocationPickerMap = ({ initialLat = 28.535517, initialLng = 77.391029, onLocationChange }) => {
   const [position, setPosition] = useState([initialLat, initialLng]);
 
-  const handleSelect = (lat, lng) => {
+  const reverseGeocode = async (lat, lng) => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.display_name) {
+          return data.display_name;
+        }
+      }
+    } catch (err) {
+      console.warn('Reverse geocode note:', err);
+    }
+    return `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+  };
+
+  const handleSelect = async (lat, lng) => {
     setPosition([lat, lng]);
-    if (onLocationChange) onLocationChange(lat, lng);
+    const address = await reverseGeocode(lat, lng);
+    if (onLocationChange) onLocationChange(lat, lng, address);
   };
 
   const handleUseCurrentGPS = () => {
     if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude, longitude } = pos.coords;
         setPosition([latitude, longitude]);
-        if (onLocationChange) onLocationChange(latitude, longitude);
-      });
+        const address = await reverseGeocode(latitude, longitude);
+        if (onLocationChange) onLocationChange(latitude, longitude, address);
+      }, (err) => {
+        console.warn('GPS location permission note:', err.message);
+      }, { enableHighAccuracy: true, timeout: 5000 });
     }
   };
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-          <MapPin className="w-3.5 h-3.5 text-rose-500" />
+        <span className="text-xs font-bold text-wine-plum dark:text-bone flex items-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5 text-accent" />
           Click anywhere on map or use GPS pin
         </span>
         <Button
@@ -70,7 +89,7 @@ export const LocationPickerMap = ({ initialLat = 28.535517, initialLng = 77.3910
         </Button>
       </div>
 
-      <div className="w-full h-64 rounded-2xl overflow-hidden border border-slate-200 relative">
+      <div className="w-full h-64 rounded-2xl overflow-hidden border border-dust-grey/60 dark:border-smoky-rose/30 relative">
         <MapContainer
           center={position}
           zoom={15}
@@ -85,9 +104,10 @@ export const LocationPickerMap = ({ initialLat = 28.535517, initialLng = 77.3910
           <Marker position={position} icon={pinIcon} />
         </MapContainer>
       </div>
-      <p className="text-[11px] text-slate-500 text-center">
-        Selected Coordinates: {position[0].toFixed(5)}, {position[1].toFixed(5)}
+      <p className="text-[11px] font-semibold text-dust-grey-dark dark:text-silver text-center">
+        Captured Coordinates: {position[0].toFixed(5)}°, {position[1].toFixed(5)}°
       </p>
     </div>
   );
 };
+
