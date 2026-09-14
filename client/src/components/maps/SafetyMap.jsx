@@ -695,30 +695,30 @@ export const SafetyMap = ({
 
       {/* Turn-by-Turn Guidance HUD Card (Active when Navigating) */}
       {isNavigating && activeRouteData && (
-        <div className="absolute top-16 left-3 right-14 z-30 animate-fade-in">
-          <div className="bg-wine-plum/95 dark:bg-[#3a1322]/95 text-bone p-3.5 rounded-2xl shadow-2xl border border-smoky-rose/50 backdrop-blur-md flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md animate-pulse">
-                <Navigation className="w-5 h-5" />
+        <div className="absolute top-16 left-3 right-3 sm:right-14 z-30 animate-fade-in pointer-events-auto max-w-[calc(100%-1.5rem)] sm:max-w-[calc(100%-4rem)]">
+          <div className="bg-wine-plum/95 dark:bg-[#3a1322]/95 text-bone p-3 rounded-2xl shadow-2xl border border-smoky-rose/50 backdrop-blur-md flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0 overflow-hidden">
+              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md animate-pulse flex-shrink-0">
+                <Navigation className="w-4 h-4" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                    Live Safer Navigation
+              <div className="min-w-0 truncate">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 flex-shrink-0">
+                    Live Safer Nav
                   </span>
                   <span className="text-xs font-extrabold text-bone truncate">{activeRouteData.name || 'Destination'}</span>
                 </div>
-                <p className="text-xs font-semibold text-silver mt-0.5">
-                  Proceed along well-lit safe corridor • {activeRouteData.duration || '18 min'} ({activeRouteData.distance || '1.4 km'})
+                <p className="text-[11px] font-semibold text-silver mt-0.5 truncate">
+                  {activeRouteData.duration || '18 min'} ({activeRouteData.distance || '1.4 km'}) • Safe Corridor
                 </p>
               </div>
             </div>
 
             <button
               onClick={handleStopNavigation}
-              className="px-3 py-1.5 rounded-xl bg-emergency text-white text-xs font-bold flex items-center gap-1 hover:bg-rose-700 transition-colors shadow-md flex-shrink-0"
+              className="px-2.5 py-1.5 rounded-xl bg-emergency text-white text-xs font-bold flex items-center gap-1 hover:bg-rose-700 transition-colors shadow-md flex-shrink-0"
             >
-              <Square className="w-3.5 h-3.5 fill-current" />
+              <Square className="w-3 h-3 fill-current" />
               <span>Exit</span>
             </button>
           </div>
