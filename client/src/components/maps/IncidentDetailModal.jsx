@@ -45,7 +45,11 @@ export const IncidentDetailModal = ({ report, isOpen, onClose }) => {
             <span>•</span>
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              {new Date(report.created_at).toLocaleDateString()}
+              {(() => {
+                if (!report.created_at) return new Date().toLocaleDateString();
+                const d = new Date(report.created_at);
+                return isNaN(d.getTime()) ? new Date().toLocaleDateString() : d.toLocaleDateString();
+              })()}
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">

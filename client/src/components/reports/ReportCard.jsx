@@ -54,7 +54,11 @@ export const ReportCard = ({ report, onClick }) => {
             <span>•</span>
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
-              {new Date(report.created_at).toLocaleDateString()}
+              {(() => {
+                if (!report.created_at) return new Date().toLocaleDateString();
+                const d = new Date(report.created_at);
+                return isNaN(d.getTime()) ? new Date().toLocaleDateString() : d.toLocaleDateString();
+              })()}
             </span>
           </div>
         </div>

@@ -1,5 +1,3 @@
-import { INITIAL_REPORTS } from '../data/mockData';
-
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 // Helper to get stored auth token
@@ -162,14 +160,14 @@ export const apiService = {
       if (res.ok) {
         const json = await res.json();
         if (json.data) {
-          return this._dedupeReports([...json.data, ...cloudReports, ...local, ...INITIAL_REPORTS]);
+          return this._dedupeReports([...json.data, ...cloudReports, ...local]);
         }
       }
     } catch (e) {
       console.warn('Reports API unavailable:', e.message);
     }
 
-    return this._dedupeReports([...cloudReports, ...local, ...INITIAL_REPORTS]);
+    return this._dedupeReports([...cloudReports, ...local]);
   },
 
   _dedupeReports(allReports) {
