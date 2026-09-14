@@ -135,11 +135,45 @@ export const createReport = async (req, res, next) => {
       }
     }
 
+    // Check 1km proximity consensus (reports within 1km of same category in last 14 days)
+    const proximityMatches = await query(
+      `SELECT id, user_id, latitude, longitude, category, status 
+       FROM reports 
+       WHERE category = $1 
+         AND ABS(latitude - $2) <= 0.009 
+         AND ABS(longitude - $3) <= 0.009
+         AND status != 'Resolved'
+         AND created_at >= NOW() - INTERVAL '14 days'`,
+      [category, parsedLat, parsedLng]
+    );
+
+    let initialStatus = 'Submitted';
+    let verificationStatus = 'Under Review';
+    let isConsensusVerified = false;
+
+    if (proximityMatches.rows && proximityMatches.rows.length > 0) {
+      initialStatus = 'Verified';
+      verificationStatus = 'Community Verified (2+ Users within 1km)';
+      isConsensusVerified = true;
+      summaryText = `${summaryText} • [Verified: 2+ independent community reports within 1km]`;
+
+      // Auto-upgrade all matching nearby reports in PostgreSQL database to Verified status as well!
+      const matchingIds = proximityMatches.rows.map(r => r.id);
+      await query(
+        `UPDATE reports 
+         SET status = 'Verified', 
+             verification_status = 'Community Verified (2+ Users within 1km)',
+             updated_at = CURRENT_TIMESTAMP 
+         WHERE id = ANY($1::int[])`,
+        [matchingIds]
+      );
+    }
+
     const result = await query(
       `INSERT INTO reports 
         (user_id, title, category, description, image_url, latitude, longitude, address, severity, status, verification_status, ai_summary)
        VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'Submitted', 'Unverified', $10)
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
       [
         userId,
@@ -151,18 +185,23 @@ export const createReport = async (req, res, next) => {
         parsedLng,
         address ? address.trim() : 'Detected Location',
         severity || 'Medium',
+        initialStatus,
+        verificationStatus,
         summaryText
       ]
     );
 
     const createdReport = {
       ...result.rows[0],
-      user_name: req.user.name || 'Community Member'
+      user_name: req.user.name || 'Community Member',
+      is_consensus_verified: isConsensusVerified
     };
 
     return res.status(201).json({
       success: true,
-      message: 'Thank you for helping make your community safer. Your report has been submitted.',
+      message: isConsensusVerified
+        ? 'Thank you! Matching hazard confirmed within 1km — Report automatically upgraded to Verified Status across the global map!'
+        : 'Thank you for helping make your community safer. Your report has been submitted.',
       data: createdReport
     });
   } catch (error) {

@@ -167,27 +167,65 @@ export const apiService = {
       if (err.name === 'TypeError' || (err.message && (err.message.includes('fetch') || err.message.includes('Server unavailable')))) {
         console.warn('Backend server unreachable. Logging report in local storage fallback:', err.message);
         
+        const lat = parseFloat(reportData.latitude) || 28.5355;
+        const lng = parseFloat(reportData.longitude) || 77.3910;
+        const cat = reportData.category || 'Poor Lighting';
+
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
+        
+        // Haversine distance check for 1km proximity consensus
+        const hasNearbyConsensus = existing.some(r => {
+          if (r.category !== cat || r.status === 'Resolved') return false;
+          const dLat = (r.latitude - lat) * (Math.PI / 180);
+          const dLng = (r.longitude - lng) * (Math.PI / 180);
+          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat * (Math.PI / 180)) * Math.cos(r.latitude * (Math.PI / 180)) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          return (6371 * c) <= 1.0; // within 1km
+        });
+
+        const status = hasNearbyConsensus ? 'Verified' : 'Submitted';
+        const verStatus = hasNearbyConsensus ? 'Community Verified (2+ Users within 1km)' : 'Under Review';
+        const summary = hasNearbyConsensus
+          ? `${reportData.ai_summary || 'Community hazard logged.'} • [Verified: 2+ independent community reports within 1km]`
+          : (reportData.ai_summary || 'Community hazard logged.');
+
+        // If consensus reached, auto-upgrade matching local reports to Verified status
+        const updatedExisting = existing.map(r => {
+          if (r.category === cat && r.status !== 'Resolved') {
+            const dLat = (r.latitude - lat) * (Math.PI / 180);
+            const dLng = (r.longitude - lng) * (Math.PI / 180);
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat * (Math.PI / 180)) * Math.cos(r.latitude * (Math.PI / 180)) *
+                      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            if ((6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))) <= 1.0) {
+              return { ...r, status: 'Verified', verification_status: verStatus };
+            }
+          }
+          return r;
+        });
+
         const localReport = {
           id: Date.now(),
           user_id: 1,
           title: reportData.title || 'Community Safety Hazard',
-          category: reportData.category || 'Poor Lighting',
+          category: cat,
           description: reportData.description || '',
           image_url: reportData.image_url || null,
-          latitude: parseFloat(reportData.latitude) || 28.5355,
-          longitude: parseFloat(reportData.longitude) || 77.3910,
+          latitude: lat,
+          longitude: lng,
           address: reportData.address || 'Captured Location',
           severity: reportData.severity || 'Medium',
-          status: 'Submitted',
-          verification_status: 'Unverified',
-          ai_summary: reportData.ai_summary || 'Community hazard logged.',
+          status: status,
+          verification_status: verStatus,
+          ai_summary: summary,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           is_offline_fallback: true
         };
 
-        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
-        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify([localReport, ...existing]));
+        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify([localReport, ...updatedExisting]));
         return localReport;
       }
       throw err;

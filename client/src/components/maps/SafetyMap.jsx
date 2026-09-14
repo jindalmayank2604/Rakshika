@@ -353,9 +353,9 @@ export const SafetyMap = ({
           </div>
           <h4 class="font-bold text-xs text-slate-900 mb-1">${inc.title}</h4>
           <p class="text-[11px] text-slate-600 line-clamp-2">${inc.description}</p>
-          <div class="mt-2 pt-1 border-t border-slate-200 text-[10px] text-slate-400 flex items-center justify-between">
-            <span>${inc.address || 'Reported Location'}</span>
-            <span class="text-emerald-700 font-bold">${inc.status || 'Submitted'}</span>
+          <div class="mt-2 pt-1 border-t border-slate-200 text-[10px] text-slate-400 flex items-center justify-between gap-1">
+            <span class="truncate max-w-[130px]">${inc.address || 'Reported Location'}</span>
+            <span class="${inc.status === 'Verified' ? 'text-purple-700 dark:text-purple-300 font-extrabold bg-purple-100 dark:bg-purple-950 px-1.5 py-0.5 rounded border border-purple-300' : 'text-emerald-700 font-bold'}">${inc.status === 'Verified' ? '✓ Verified (2+ Users)' : (inc.status || 'Submitted')}</span>
           </div>
         </div>
       `;
