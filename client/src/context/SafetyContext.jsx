@@ -32,6 +32,18 @@ export const SafetyProvider = ({ children }) => {
         }
       );
     }
+
+    // Event listeners for dynamic cross-tab / instant report sync
+    const handleReportAdded = () => {
+      loadData();
+    };
+    window.addEventListener('wesafe_report_added', handleReportAdded);
+    window.addEventListener('storage', handleReportAdded);
+
+    return () => {
+      window.removeEventListener('wesafe_report_added', handleReportAdded);
+      window.removeEventListener('storage', handleReportAdded);
+    };
   }, []);
 
   const loadData = async () => {

@@ -1,3 +1,5 @@
+import { INITIAL_REPORTS } from '../data/mockData';
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 // Helper to get stored auth token
@@ -130,6 +132,18 @@ export const apiService = {
   // --- REPORTS / INCIDENTS ---
   async getReports(filters = {}) {
     const local = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
+    let cloudReports = [];
+
+    // Attempt public cloud sync fetch for cross-device GitHub Pages support
+    try {
+      const cloudRes = await fetch('https://crudcrud.com/api/d0385b71c52449c883f6b217b9e7e4a4/reports');
+      if (cloudRes.ok) {
+        cloudReports = await cloudRes.json();
+      }
+    } catch (e) {
+      console.warn('Public cloud reports notice:', e.message);
+    }
+
     try {
       const params = new URLSearchParams(filters).toString();
       const res = await fetch(`${API_BASE}/reports?${params}`, {
@@ -137,12 +151,38 @@ export const apiService = {
       });
       if (res.ok) {
         const json = await res.json();
-        if (json.data) return [...json.data, ...local];
+        if (json.data) {
+          return this._dedupeReports([...json.data, ...cloudReports, ...local, ...INITIAL_REPORTS]);
+        }
       }
     } catch (e) {
       console.warn('Reports API unavailable:', e.message);
     }
-    return local;
+
+    return this._dedupeReports([...cloudReports, ...local, ...INITIAL_REPORTS]);
+  },
+
+  _dedupeReports(allReports) {
+    const seen = new Set();
+    return allReports.filter(r => {
+      if (!r) return false;
+      const key = r.id ? String(r.id) : `${r.title}-${r.latitude}-${r.longitude}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  },
+
+  async syncReportToCloud(report) {
+    try {
+      await fetch('https://crudcrud.com/api/d0385b71c52449c883f6b217b9e7e4a4/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(report)
+      });
+    } catch (e) {
+      console.warn('Cloud report sync notice:', e.message);
+    }
   },
 
   async getIncidents(filters = {}) {
@@ -159,13 +199,14 @@ export const apiService = {
       });
       const data = await res.json();
       if (res.ok && data.success) {
+        this.syncReportToCloud(data.data);
         return data.data;
       }
       throw new Error(data.message || 'Failed to submit report. Please check authentication.');
     } catch (err) {
       // If network failure / backend unreachable (e.g. testing frontend preview or backend offline)
       if (err.name === 'TypeError' || (err.message && (err.message.includes('fetch') || err.message.includes('Server unavailable')))) {
-        console.warn('Backend server unreachable. Logging report in local storage fallback:', err.message);
+        console.warn('Backend server unreachable. Logging report in local storage & public cloud fallback:', err.message);
         
         const lat = parseFloat(reportData.latitude) || 28.5355;
         const lng = parseFloat(reportData.longitude) || 77.3910;
@@ -207,9 +248,12 @@ export const apiService = {
           return r;
         });
 
+        const currentUser = this.getCurrentUser() || { name: 'Community Member' };
+
         const localReport = {
           id: Date.now(),
-          user_id: 1,
+          user_id: currentUser.id || 1,
+          user_name: currentUser.name || 'Community Member',
           title: reportData.title || 'Community Safety Hazard',
           category: cat,
           description: reportData.description || '',
@@ -226,7 +270,15 @@ export const apiService = {
           is_offline_fallback: true
         };
 
-        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify([localReport, ...updatedExisting]));
+        const updatedLocal = [localReport, ...updatedExisting];
+        localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(updatedLocal));
+        
+        // Sync report to public cloud store for cross-device visibility
+        this.syncReportToCloud(localReport);
+
+        // Dispatch event for instant UI refresh
+        window.dispatchEvent(new CustomEvent('wesafe_report_added', { detail: localReport }));
+
         return localReport;
       }
       throw err;
