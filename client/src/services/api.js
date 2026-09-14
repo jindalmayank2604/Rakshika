@@ -173,7 +173,7 @@ export const apiService = {
 
         const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
         
-        // Haversine distance check for 1km proximity consensus
+        // Haversine distance check for 1km proximity match
         const hasNearbyConsensus = existing.some(r => {
           if (r.category !== cat || r.status === 'Resolved') return false;
           const dLat = (r.latitude - lat) * (Math.PI / 180);
@@ -185,13 +185,14 @@ export const apiService = {
           return (6371 * c) <= 1.0; // within 1km
         });
 
-        const status = hasNearbyConsensus ? 'Verified' : 'Submitted';
-        const verStatus = hasNearbyConsensus ? 'Community Verified (2+ Users within 1km)' : 'Under Review';
+        const status = 'Unresolved';
+        const verStatus = 'Publicly Live';
+        const effectiveSeverity = hasNearbyConsensus ? 'High' : (reportData.severity || 'Medium');
         const summary = hasNearbyConsensus
-          ? `${reportData.ai_summary || 'Community hazard logged.'} • [Verified: 2+ independent community reports within 1km]`
+          ? `${reportData.ai_summary || 'Community hazard logged.'} • [Priority Boosted: 2+ community reports within 1km]`
           : (reportData.ai_summary || 'Community hazard logged.');
 
-        // If consensus reached, auto-upgrade matching local reports to Verified status
+        // If 2+ reports within 1km, upgrade matching nearby reports to High severity
         const updatedExisting = existing.map(r => {
           if (r.category === cat && r.status !== 'Resolved') {
             const dLat = (r.latitude - lat) * (Math.PI / 180);
@@ -200,7 +201,7 @@ export const apiService = {
                       Math.cos(lat * (Math.PI / 180)) * Math.cos(r.latitude * (Math.PI / 180)) *
                       Math.sin(dLng / 2) * Math.sin(dLng / 2);
             if ((6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))) <= 1.0) {
-              return { ...r, status: 'Verified', verification_status: verStatus };
+              return { ...r, severity: 'High' };
             }
           }
           return r;
@@ -216,7 +217,7 @@ export const apiService = {
           latitude: lat,
           longitude: lng,
           address: reportData.address || 'Captured Location',
-          severity: reportData.severity || 'Medium',
+          severity: effectiveSeverity,
           status: status,
           verification_status: verStatus,
           ai_summary: summary,

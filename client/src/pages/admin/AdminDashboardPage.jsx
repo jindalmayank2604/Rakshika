@@ -44,8 +44,7 @@ export const AdminDashboardPage = () => {
 
   // Statistics calculation
   const total = reports.length;
-  const pending = reports.filter(r => r.status === 'Submitted' || r.status === 'Under Review').length;
-  const verified = reports.filter(r => r.status === 'Verified').length;
+  const unresolved = reports.filter(r => r.status !== 'Resolved').length;
   const resolved = reports.filter(r => r.status === 'Resolved').length;
 
   const chartData = [
@@ -80,8 +79,7 @@ export const AdminDashboardPage = () => {
   };
 
   const filteredReports = reports.filter((r) => {
-    if (filterTab === 'Pending') return r.status === 'Submitted' || r.status === 'Under Review';
-    if (filterTab === 'Verified') return r.status === 'Verified';
+    if (filterTab === 'Unresolved') return r.status !== 'Resolved';
     if (filterTab === 'Resolved') return r.status === 'Resolved';
     return true;
   });
@@ -210,7 +208,7 @@ export const AdminDashboardPage = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="text-lg font-bold text-wine-plum dark:text-bone">Report Review & Verification Queue</h3>
           <div className="flex items-center gap-1.5">
-            {['All', 'Pending', 'Verified', 'Resolved'].map((tab) => (
+            {['All', 'Unresolved', 'Resolved'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setFilterTab(tab)}

@@ -355,7 +355,7 @@ export const SafetyMap = ({
           <p class="text-[11px] text-slate-600 line-clamp-2">${inc.description}</p>
           <div class="mt-2 pt-1 border-t border-slate-200 text-[10px] text-slate-400 flex items-center justify-between gap-1">
             <span class="truncate max-w-[130px]">${inc.address || 'Reported Location'}</span>
-            <span class="${inc.status === 'Verified' ? 'text-purple-700 dark:text-purple-300 font-extrabold bg-purple-100 dark:bg-purple-950 px-1.5 py-0.5 rounded border border-purple-300' : 'text-emerald-700 font-bold'}">${inc.status === 'Verified' ? '✓ Verified (2+ Users)' : (inc.status || 'Submitted')}</span>
+            <span class="${inc.status === 'Resolved' ? 'text-emerald-700 font-extrabold bg-emerald-100 px-1.5 py-0.5 rounded' : 'text-amber-800 font-bold bg-amber-100 px-1.5 py-0.5 rounded'}">${inc.status === 'Resolved' ? '✓ Resolved' : '⚠️ Unresolved'}</span>
           </div>
         </div>
       `;

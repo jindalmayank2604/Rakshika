@@ -179,7 +179,7 @@ export const ReportWizard = ({ onComplete }) => {
             Thank You for Empowering Safety
           </h3>
           <p className="text-sm text-dust-grey-dark dark:text-silver mt-2 leading-relaxed">
-            Your community safety report has been logged and queued for moderation. Your contribution helps commuters make safer journey choices.
+            Your community safety report has been registered directly and is now publicly live on the safety map for all users.
           </p>
         </div>
 
@@ -187,7 +187,7 @@ export const ReportWizard = ({ onComplete }) => {
           <p><strong>Report Title:</strong> {formData.title}</p>
           <p><strong>Category:</strong> {formData.category}</p>
           <p><strong>Location:</strong> {formData.address || `${parseFloat(formData.latitude).toFixed(4)}°, ${parseFloat(formData.longitude).toFixed(4)}°`}</p>
-          <p><strong>Status:</strong> <span className="text-emerald-700 dark:text-emerald-400 font-bold">Submitted (Under Review)</span></p>
+          <p><strong>Status:</strong> <span className="text-amber-700 dark:text-amber-400 font-bold">Unresolved (Live on Map)</span></p>
         </div>
 
         <div className="flex justify-center gap-3 pt-2">

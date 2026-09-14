@@ -5,11 +5,8 @@ import { Badge } from '../ui/Badge';
 
 export const ReportCard = ({ report, onClick }) => {
   const getStatusBadge = (status) => {
-    if (status === 'Verified') return <Badge variant="success">Verified</Badge>;
-    if (status === 'Resolved') return <Badge variant="teal">Resolved</Badge>;
-    if (status === 'Under Review') return <Badge variant="warning">Under Review</Badge>;
-    if (status === 'Rejected') return <Badge variant="danger">Rejected</Badge>;
-    return <Badge variant="primary">Submitted</Badge>;
+    if (status === 'Resolved') return <Badge variant="success">Resolved</Badge>;
+    return <Badge variant="warning">Unresolved</Badge>;
   };
 
   const getSeverityBadge = (severity) => {

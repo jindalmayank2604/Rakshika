@@ -67,8 +67,8 @@ export const initDb = async () => {
         longitude DOUBLE PRECISION NOT NULL,
         address VARCHAR(255),
         severity VARCHAR(20) DEFAULT 'Medium',
-        status VARCHAR(30) DEFAULT 'Submitted',
-        verification_status VARCHAR(50) DEFAULT 'Unverified',
+        status VARCHAR(30) DEFAULT 'Unresolved',
+        verification_status VARCHAR(50) DEFAULT 'Publicly Live',
         ai_summary TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -113,6 +113,7 @@ export const initDb = async () => {
       CREATE INDEX IF NOT EXISTS idx_reports_category ON reports(category);
       CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
       CREATE INDEX IF NOT EXISTS idx_emergency_user ON emergency_contacts(user_id);
+      UPDATE reports SET status = 'Unresolved' WHERE status NOT IN ('Unresolved', 'Resolved');
     `);
 
     client.release();

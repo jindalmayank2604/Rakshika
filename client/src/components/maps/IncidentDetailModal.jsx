@@ -8,11 +8,8 @@ export const IncidentDetailModal = ({ report, isOpen, onClose }) => {
   if (!report) return null;
 
   const getStatusBadge = (status) => {
-    if (status === 'Verified') return <Badge variant="success">Verified Report</Badge>;
-    if (status === 'Resolved') return <Badge variant="teal">Resolved</Badge>;
-    if (status === 'Under Review') return <Badge variant="warning">Under Review</Badge>;
-    if (status === 'Rejected') return <Badge variant="danger">Flagged</Badge>;
-    return <Badge variant="primary">Submitted</Badge>;
+    if (status === 'Resolved') return <Badge variant="success">Resolved</Badge>;
+    return <Badge variant="warning">Unresolved</Badge>;
   };
 
   return (

@@ -53,7 +53,7 @@ export const MyReportsPage = () => {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {['All', 'Submitted', 'Under Review', 'Verified', 'Resolved'].map((status) => (
+          {['All', 'Unresolved', 'Resolved'].map((status) => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
