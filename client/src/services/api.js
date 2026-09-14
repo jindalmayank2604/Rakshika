@@ -130,19 +130,29 @@ export const apiService = {
   },
 
   // --- REPORTS / INCIDENTS ---
-  async getReports(filters = {}) {
-    const local = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
-    let cloudReports = [];
+  getCloudContainerId() {
+    return localStorage.getItem('wesafe_cloud_container_id') || 'ff808181a09d98f701a0a1b903e3082e';
+  },
 
-    // Attempt public cloud sync fetch for cross-device GitHub Pages support
+  async fetchCloudReports() {
+    const containerId = this.getCloudContainerId();
     try {
-      const cloudRes = await fetch('https://crudcrud.com/api/d0385b71c52449c883f6b217b9e7e4a4/reports');
-      if (cloudRes.ok) {
-        cloudReports = await cloudRes.json();
+      const res = await fetch(`https://api.restful-api.dev/objects/${containerId}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.data && Array.isArray(json.data.reports)) {
+          return json.data.reports;
+        }
       }
     } catch (e) {
-      console.warn('Public cloud reports notice:', e.message);
+      console.warn('Cloud reports fetch notice:', e.message);
     }
+    return [];
+  },
+
+  async getReports(filters = {}) {
+    const local = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
+    const cloudReports = await this.fetchCloudReports();
 
     try {
       const params = new URLSearchParams(filters).toString();
@@ -175,11 +185,33 @@ export const apiService = {
 
   async syncReportToCloud(report) {
     try {
-      await fetch('https://crudcrud.com/api/d0385b71c52449c883f6b217b9e7e4a4/reports', {
+      let currentCloud = await this.fetchCloudReports();
+      const updated = [report, ...currentCloud.filter(r => String(r.id) !== String(report.id))];
+
+      let containerId = this.getCloudContainerId();
+
+      // Try PUT to current container
+      if (containerId) {
+        const putRes = await fetch(`https://api.restful-api.dev/objects/${containerId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'wesafe_global_reports', data: { reports: updated } })
+        });
+        if (putRes.ok) return;
+      }
+
+      // If PUT failed or container missing, auto-heal by POSTing a new container
+      const postRes = await fetch('https://api.restful-api.dev/objects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(report)
+        body: JSON.stringify({ name: 'wesafe_global_reports', data: { reports: updated } })
       });
+      if (postRes.ok) {
+        const created = await postRes.json();
+        if (created.id) {
+          localStorage.setItem('wesafe_cloud_container_id', created.id);
+        }
+      }
     } catch (e) {
       console.warn('Cloud report sync notice:', e.message);
     }
