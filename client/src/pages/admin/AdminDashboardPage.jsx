@@ -250,7 +250,11 @@ export const AdminDashboardPage = () => {
                   <h4 className="text-sm font-bold text-wine-plum dark:text-bone">{report.title}</h4>
                   <p className="text-xs text-dust-grey-dark dark:text-silver line-clamp-1">{report.description}</p>
                   <p className="text-[11px] text-dust-grey-dark dark:text-silver">
-                    📍 {report.address} • Submitted on {new Date(report.created_at).toLocaleDateString()}
+                    📍 {report.address} • Submitted on {(() => {
+                      if (!report.created_at) return new Date().toLocaleDateString();
+                      const d = new Date(report.created_at);
+                      return isNaN(d.getTime()) ? new Date().toLocaleDateString() : d.toLocaleDateString();
+                    })()}
                   </p>
                 </div>
               </div>
