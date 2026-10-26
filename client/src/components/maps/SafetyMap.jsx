@@ -206,29 +206,33 @@ export const SafetyMap = ({
         end = activeRouteData.destinationCoords;
       }
 
-      let routeCoords = [];
-      let calculatedDist = null;
-      let calculatedDur = null;
+      let routeCoords = (activeRouteData.coordinates && activeRouteData.coordinates.length > 0)
+        ? activeRouteData.coordinates
+        : [];
+      let calculatedDist = activeRouteData.distance || null;
+      let calculatedDur = activeRouteData.duration || null;
 
-      // Fetch Real Road Network Geometry via OSRM Public API
-      try {
-        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson`;
-        const res = await fetch(osrmUrl);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.routes && data.routes.length > 0) {
-            routeCoords = data.routes[0].geometry.coordinates;
-            const distKm = (data.routes[0].distance / 1000).toFixed(1) + ' km';
-            const durMin = Math.max(1, Math.round(data.routes[0].duration / 60)) + ' min';
-            calculatedDist = distKm;
-            calculatedDur = durMin;
+      // If coordinates not already provided by Dijkstra engine, fetch road geometry via OSRM
+      if (!routeCoords || routeCoords.length === 0) {
+        try {
+          const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson`;
+          const res = await fetch(osrmUrl);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.routes && data.routes.length > 0) {
+              routeCoords = data.routes[0].geometry.coordinates;
+              const distKm = (data.routes[0].distance / 1000).toFixed(1) + ' km';
+              const durMin = Math.max(1, Math.round(data.routes[0].duration / 60)) + ' min';
+              calculatedDist = distKm;
+              calculatedDur = durMin;
+            }
           }
+        } catch (err) {
+          console.warn('OSRM road route note:', err.message);
         }
-      } catch (err) {
-        console.warn('OSRM road route note:', err.message);
       }
 
-      // Fallback waypoints if OSRM fails
+      // Fallback waypoints if all else fails
       if (!routeCoords || routeCoords.length === 0) {
         routeCoords = [
           start,
@@ -270,7 +274,7 @@ export const SafetyMap = ({
             'line-cap': 'round'
           },
           paint: {
-            'line-color': activeRouteData.id === 'community' ? '#2b7a78' : '#a26769',
+            'line-color': activeRouteData.color || (activeRouteData.id === 'dijkstra-safe' ? '#059669' : '#e11d48'),
             'line-width': 10,
             'line-opacity': 0.45
           }
@@ -286,7 +290,7 @@ export const SafetyMap = ({
             'line-cap': 'round'
           },
           paint: {
-            'line-color': activeRouteData.id === 'community' ? '#0284c7' : '#e11d48',
+            'line-color': activeRouteData.color || (activeRouteData.id === 'dijkstra-safe' ? '#059669' : '#e11d48'),
             'line-width': 5,
             'line-opacity': 0.95
           }
