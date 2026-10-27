@@ -256,8 +256,16 @@ export const SafetyMap = ({
         }
       };
 
+      const targetColor = activeRouteData.color || (activeRouteData.id === 'dijkstra-safe' ? '#059669' : '#e11d48');
+
       if (map.getSource('safer-route')) {
         map.getSource('safer-route').setData(geojson);
+        if (map.getLayer('safer-route-glow')) {
+          map.setPaintProperty('safer-route-glow', 'line-color', targetColor);
+        }
+        if (map.getLayer('safer-route-line')) {
+          map.setPaintProperty('safer-route-line', 'line-color', targetColor);
+        }
       } else {
         map.addSource('safer-route', {
           type: 'geojson',
